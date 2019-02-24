@@ -1,8 +1,8 @@
 package ronan_tommey.reg_logger.Image_Processing;
 
-public class PiCamFrameStreamer {
+public class PiCamFrameStreamer implements Runnable{
 
-    void run() {
+    public void run() {
 
     }
 }
