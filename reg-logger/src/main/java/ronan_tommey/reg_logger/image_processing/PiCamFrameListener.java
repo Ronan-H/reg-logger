@@ -1,4 +1,4 @@
-package ronan_tommey.reg_logger.Image_Processing;
+package ronan_tommey.reg_logger.image_processing;
 
 import java.awt.image.BufferedImage;
 

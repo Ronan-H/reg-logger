@@ -1,6 +1,6 @@
 package ronan_tommey.reg_logger.car_data;
 
-import ronan_tommey.reg_logger.Image_Processing.FrameTimeManager;
+import ronan_tommey.reg_logger.image_processing.FrameTimeManager;
 
 import java.awt.image.BufferedImage;
 import java.util.List;

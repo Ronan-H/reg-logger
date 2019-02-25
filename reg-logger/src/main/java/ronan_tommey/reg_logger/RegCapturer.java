@@ -1,6 +1,6 @@
 package ronan_tommey.reg_logger;
 
-import ronan_tommey.reg_logger.Image_Processing.PiCamFrameListener;
+import ronan_tommey.reg_logger.image_processing.PiCamFrameListener;
 
 import java.awt.image.BufferedImage;
 
