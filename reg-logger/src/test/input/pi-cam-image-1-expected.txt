@@ -1,0 +1,5 @@
+
+Leftmost pixel X: 145
+Rightmost pixel X: 229
+Topmost pixel Y: 40
+Bottommost pixel Y: 71

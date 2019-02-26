@@ -6,17 +6,11 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class CarDataUtils {
-
     public static CarData generateCarData(BufferedImage image){
-
-        CarData temp = new CarData();
-        return  temp;
+        return null;
     }
 
     public static CarEstimate generateCarEstimate(List<CarData> carData, FrameTimeManager FrameTimeMan){
-
-        CarEstimate temp = new CarEstimate();
-        return temp;
+        return null;
     }
-
 }
