@@ -10,7 +10,7 @@ public class CarDataUtils {
         return null;
     }
 
-    public static CarEstimate generateCarEstimate(List<CarData> carData, FrameTimeManager FrameTimeMan){
+    public static CarDataSeries generateCarEstimate(List<CarData> carData, FrameTimeManager FrameTimeMan){
         return null;
     }
 }
