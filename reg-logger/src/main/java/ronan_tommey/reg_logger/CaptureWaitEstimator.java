@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CaptureWaitEstimator {
     private int numEstimateFrames;
-    private List<CarData> carDataList;
+    private CarDataSeries carDataSeries;
     private FrameTimeManager frameTimeManager;
 
     public CaptureWaitEstimator(int numEstimateFrames) {

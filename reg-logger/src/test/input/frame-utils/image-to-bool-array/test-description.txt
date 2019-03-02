@@ -1,0 +1,4 @@
+- Load in image tiny-frame.png
+- Call FrameUtils.convertImageToBooleanArray(image) to get a boolean array
+- Create expected boolean array 100101011100 (ie. {true, false, false, true, ...})
+- Ensure the above two arrays are identical

@@ -1,0 +1,4 @@
+- Read in pi-cam-image-1.png
+- Call CarDataUtils.generateCarData(image) to get a CarData object
+- Check if left, right, top, bottom most pixels from CarData match pi-cam-image-1-expectyed.txt values
+- Calculate width by hand (= |right - left|) based on text file values, hard coded value should match CarData width
