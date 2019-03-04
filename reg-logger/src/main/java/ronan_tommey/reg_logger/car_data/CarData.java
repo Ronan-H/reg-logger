@@ -14,6 +14,8 @@ public class CarData {
         this.rightX = rightX;
         this.topY = topY;
         this.bottomY = bottomY;
+
+        width = rightX - leftX;
     }
 
     public int getLeftX() {
@@ -34,5 +36,23 @@ public class CarData {
 
     public int getWidth() {
         return width;
+    }
+
+    @Override
+    public boolean equals(Object otherObj) {
+        CarData other = null;
+
+        try {
+            other = (CarData) otherObj;
+        }
+        catch (ClassCastException e) {
+            return false;
+        }
+
+        return
+                getLeftX() == other.getLeftX()
+             && getRightX() == other.getRightX()
+             && getTopY() == other.getTopY()
+             && getBottomY() == other.getBottomY();
     }
 }
