@@ -1,17 +1,15 @@
 package ronan_tommey.reg_logger.image_processing;
 
-import org.junit.Test;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FrameUtilsTest {
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void convertImageToBooleanArray() throws IOException {
         BufferedImage image = ImageIO.read(new File("./src/test/input/frame-utils/image-to-bool-array/tiny-frame.png"));
         boolean[] tester = FrameUtils.convertImageToBooleanArray(image);
@@ -21,7 +19,7 @@ public class FrameUtilsTest {
         assertEquals(expected,tester);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void removeNoise() {
     }
 }

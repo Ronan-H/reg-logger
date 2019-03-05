@@ -1,6 +1,4 @@
 package ronan_tommey.reg_logger.car_data;
-
-import org.junit.Ignore;
 import ronan_tommey.reg_logger.image_processing.FrameTimeManager;
 
 import javax.imageio.ImageIO;
@@ -24,8 +22,8 @@ public class CarDataUtilsTest {
     }
 
     //Need expected CarEstimate
-    @Ignore
     @org.junit.jupiter.api.Test
+    @org.junit.jupiter.api.Disabled
     public void generateCarEstimate() {
         CarDataSeries seriesTest = new CarDataSeries();
         FrameTimeManager FTMTest = new FrameTimeManager(10);
