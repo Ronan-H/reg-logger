@@ -1,4 +1,6 @@
-package ronan_tommey.reg_logger.image_processing;
+package ronan_tommey.reg_logger.car_data;
+
+import ronan_tommey.reg_logger.car_data.FrameTimeManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 

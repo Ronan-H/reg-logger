@@ -1,10 +1,8 @@
 package ronan_tommey.reg_logger.car_data;
 
-import ronan_tommey.reg_logger.image_processing.FrameTimeManager;
 import ronan_tommey.reg_logger.image_processing.FrameUtils;
 
 import java.awt.image.BufferedImage;
-import java.util.List;
 
 public class CarDataUtils {
 

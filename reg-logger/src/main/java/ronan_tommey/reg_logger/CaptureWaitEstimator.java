@@ -2,9 +2,7 @@ package ronan_tommey.reg_logger;
 
 import ronan_tommey.reg_logger.car_data.CarData;
 import ronan_tommey.reg_logger.car_data.CarDataSeries;
-import ronan_tommey.reg_logger.image_processing.FrameTimeManager;
-
-import java.util.List;
+import ronan_tommey.reg_logger.car_data.FrameTimeManager;
 
 public class CaptureWaitEstimator {
     private int numEstimateFrames;
