@@ -11,6 +11,18 @@ public class CarDataSeries {
     }
 
     public void addNextCarData(CarData carData){
+        carDataList.add(carData);
+    }
 
+    public CarData getFirst() {
+        return carDataList.get(0);
+    }
+
+    public CarData getLast() {
+        return carDataList.get(carDataList.size() - 1);
+    }
+
+    public int size() {
+        return carDataList.size();
     }
 }
