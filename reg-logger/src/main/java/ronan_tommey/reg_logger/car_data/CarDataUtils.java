@@ -58,6 +58,32 @@ public class CarDataUtils {
     }
 
     public static CarEstimate generateCarEstimate(CarDataSeries carDataSeries, FrameTimeManager frameTimeManager){
-        return null;
+        double distance;
+        CarData first = carDataSeries.getFirst();
+        CarData last = carDataSeries.getLast();
+        // calculate distances from both side of the car across all frames
+        double rightEndDistance = last.getRightX() - first.getRightX();
+        double leftEndDistance = last.getLeftX() - first.getRightX();
+
+        // use whichever value is bigger, so if the car is emergin from the side of the screen,
+        // the appropriate value will be used
+        if (Math.abs(rightEndDistance) > Math.abs(leftEndDistance)) {
+            distance = rightEndDistance;
+        }
+        else {
+            distance = leftEndDistance;
+        }
+
+        // positive distance indicates that the car is going right
+        // (otherwise, it is going left)
+        boolean goingRight = (distance > 0);
+
+        // calculate the speed of the car, in pixels per frame
+        double pixelSpeed = distance / carDataSeries.size();
+
+        // TODO: calculate kmph speed
+        CarEstimate carEstimate = new CarEstimate(goingRight, pixelSpeed, 0);
+
+        return carEstimate;
     }
 }
