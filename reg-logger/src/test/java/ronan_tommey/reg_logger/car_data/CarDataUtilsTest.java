@@ -10,7 +10,7 @@ public class CarDataUtilsTest {
     @org.junit.jupiter.api.Test
     public void generateCarData() throws IOException {
 
-        BufferedImage image = ImageUtils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
+        BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
         CarData tester = CarDataUtils.generateCarData(image);
         CarData expected = new CarData(145,229,40,71);
 

@@ -1,9 +1,6 @@
 package ronan_tommey.reg_logger.car_data;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +15,7 @@ public class CarDataTest {
     @org.junit.jupiter.api.Test
     void testCarData() throws IOException {
 
-        BufferedImage image = ImageUtils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
+        BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
         CarData tester = CarDataUtils.generateCarData(image);
         CarData expected = new CarData(left,right,top,bottom);
 
@@ -28,7 +25,7 @@ public class CarDataTest {
     @org.junit.jupiter.api.Test
     void testGetLeftX() throws IOException {
 
-        BufferedImage image = ImageUtils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
+        BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
         CarData tester = CarDataUtils.generateCarData(image);
         int testedLeft = tester.getLeftX();
 
@@ -37,7 +34,7 @@ public class CarDataTest {
 
     @org.junit.jupiter.api.Test
     void testGetRightX() throws IOException {
-        BufferedImage image = ImageUtils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
+        BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
         CarData tester = CarDataUtils.generateCarData(image);
         int testedRight = tester.getRightX();
 
@@ -47,7 +44,7 @@ public class CarDataTest {
     @org.junit.jupiter.api.Test
     void testGetTopY() throws IOException {
 
-        BufferedImage image = ImageUtils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
+        BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
         CarData tester = CarDataUtils.generateCarData(image);
         int testedTop = tester.getTopY();
 
@@ -56,7 +53,7 @@ public class CarDataTest {
 
     @org.junit.jupiter.api.Test
     void testGetBottomY() throws IOException {
-        BufferedImage image = ImageUtils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
+        BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
         CarData tester = CarDataUtils.generateCarData(image);
         int testedBottom = tester.getBottomY();
 
@@ -66,7 +63,7 @@ public class CarDataTest {
     @org.junit.jupiter.api.Test
     void testGetWidth() throws IOException {
 
-        BufferedImage image = ImageUtils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
+        BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
         CarData tester = CarDataUtils.generateCarData(image);
 
         //Values being tested
