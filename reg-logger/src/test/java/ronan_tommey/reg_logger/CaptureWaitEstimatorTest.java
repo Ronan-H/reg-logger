@@ -17,7 +17,7 @@ class CaptureWaitEstimatorTest {
 
     @Test
     void estimateReady() {
-        CaptureWaitEstimator estimator = new CaptureWaitEstimator(4);
+        CaptureWaitEstimator estimator = new CaptureWaitEstimator(4,236);
         assertFalse(estimator.estimateReady());
 
         for(int i = 0; i < 3; i++)
