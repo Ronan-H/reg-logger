@@ -11,7 +11,7 @@ class CarEstimateTest {
 
     @Test
     void isGoingRight() throws IOException {
-        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/car-data-utils/frames-for-car");
+        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/car-data-utils/frames-for-car-going-right");
 
         CarEstimate car = Utils.TestCarDirectionRight(frames);
 
@@ -20,7 +20,7 @@ class CarEstimateTest {
 
     @Test
     void isGoingLeft() throws IOException {
-        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/car-data-utils/frames-for-car");
+        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/car-data-utils/frames-for-car-going-left");
 
         CarEstimate car = Utils.TestCarDirectionRight(frames);
 
