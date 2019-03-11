@@ -13,10 +13,7 @@ public class PiCamFrameStreamer implements Runnable{
 
     private InputStream inputStream;
     private boolean running;
-
     private PiCamFrameListener camListener;
-
-    private BufferedImage lastImage;
 
     public PiCamFrameStreamer(int frameWidth, int frameHeight, PiCamFrameListener camListener) {
         this.camListener = camListener;
@@ -34,13 +31,12 @@ public class PiCamFrameStreamer implements Runnable{
     }
 
     public void run() {
-        int i;
         int currBlock = 0;
-        int blockPos = 0;
+        int blockPos;
         int lastBlock = 0;
         int lastBlockPos = 0;
         byte[] block;
-        int numImageBytes = 0;
+        int numImageBytes;
         byte[] imageBytes;
         int offset;
         int imgBlock;
@@ -53,8 +49,6 @@ public class PiCamFrameStreamer implements Runnable{
         int highestNumBytes = 0;
         int nextBlock;
         int byteCounter;
-        int lastBlockRead = 0;
-        int lastBlockPosRead = 0;
         int oldBytesFromStart;
         int newBytesFromStart;
 
@@ -64,15 +58,6 @@ public class PiCamFrameStreamer implements Runnable{
         byte[][] blocks = new byte[numBlocks][blockSize];
 
         // initial first block read
-        try {
-            in.readFully(blocks[currBlock]);
-
-            FileOutputStream fos = new FileOutputStream("./ImageByteDump/first_read.jpeg");
-            fos.write(blocks[currBlock]);
-            fos.close();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
 
         if (imageTime == 0) {
             imageTime = System.nanoTime();
@@ -128,17 +113,12 @@ public class PiCamFrameStreamer implements Runnable{
                         imgBlockPos = offset % blockSize;
 
                         imageBytes[byteCounter++] = blocks[imgBlock][imgBlockPos];
-
-                        // debug
-                        lastBlockRead = imgBlock;
-                        lastBlockPosRead = imgBlockPos;
                     }
 
                     bais = new ByteArrayInputStream(imageBytes);
                     try {
                         nextImage = ImageIO.read(bais);
 
-                        this.lastImage = nextImage;
                         camListener.onFrameRead(nextImage, imageTime - lastImageTime);
                         lastImageTime = imageTime;
                         imageTime = 0;
