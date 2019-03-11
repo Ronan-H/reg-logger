@@ -11,15 +11,18 @@ public class CaptureWaitEstimator {
 
     public CaptureWaitEstimator(int numEstimateFrames) {
         this.numEstimateFrames = numEstimateFrames;
+        carDataSeries = new CarDataSeries();
+        // TODO: don't hard code buffer size
+        frameTimeManager = new FrameTimeManager(200);
     }
 
     public void addNextFrameData(CarData carData, long delta) {
-
+        carDataSeries.addNextCarData(carData);
+        frameTimeManager.addFrameTime(delta);
     }
 
     public boolean estimateReady(){
-        boolean temp = false;
-        return temp;
+        return carDataSeries.size() >= numEstimateFrames;
     }
 
     public long getWaitEstimate(){
