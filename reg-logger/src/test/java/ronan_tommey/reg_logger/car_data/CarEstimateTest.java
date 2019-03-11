@@ -1,5 +1,6 @@
 package ronan_tommey.reg_logger.car_data;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
@@ -11,7 +12,7 @@ class CarEstimateTest {
 
     @Test
     void isGoingRight() throws IOException {
-        BufferedImage[] frames = Utils.readTestImageFolder(".src/test/input/car-data-utils/frames-for-car");
+        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/car-data-utils/frames-for-car");
 
         CarEstimate car = Utils.TestCarDirectionRight(frames);
 
@@ -20,7 +21,7 @@ class CarEstimateTest {
 
     @Test
     void isGoingLeft() throws IOException {
-        BufferedImage[] frames = Utils.readTestImageFolder(".src/test/input/car-data-utils/frames-for-car");
+        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/car-data-utils/frames-for-car");
 
         CarEstimate car = Utils.TestCarDirectionRight(frames);
 
@@ -29,20 +30,24 @@ class CarEstimateTest {
 
     @Test
     void getPixelSpeed() throws IOException {
-        BufferedImage[] frames = Utils.readTestImageFolder(".src/test/input/car-data-utils/frames-for-car");
+        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/four-frames");
 
         //Values of car position (Car Going right)
-        int firstX = 43;
-        int secondX = 223;
+        int firstX = 98;
+        int secondX = 113;
 
         int distanceInFrames = secondX - firstX;
 
-        double speed = distanceInFrames/frames.length;
+        double speed = distanceInFrames/(frames.length-1);
 
-        assertEquals(speed, 4.19);
+        CarEstimate car = Utils.TestCarDirectionRight(frames);
+
+        assertEquals(speed, car.getPixelSpeed(),0.1);
     }
 
+    @Ignore
     @Test
     void getKmphSpeed() {
+        fail();
     }
 }
