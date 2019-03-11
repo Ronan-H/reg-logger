@@ -1,5 +1,6 @@
 package ronan_tommey.reg_logger;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
@@ -8,8 +9,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CaptureWaitEstimatorTest {
 
+    @Disabled
     @Test
     void addNextFrameData() {
+
     }
 
     @Test
@@ -27,7 +30,15 @@ class CaptureWaitEstimatorTest {
         assertTrue(estimator.estimateReady());
     }
 
+    @Disabled
     @Test
     void getWaitEstimate() {
+
+    }
+
+    @Disabled
+    @Test
+    void regDistToCapturePoint(){
+
     }
 }

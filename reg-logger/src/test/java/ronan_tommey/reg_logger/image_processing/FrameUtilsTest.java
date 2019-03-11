@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +25,7 @@ public class FrameUtilsTest {
         return imageCorrectFormat;
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void convertImageToBooleanArray() throws IOException {
         BufferedImage image = readTestImage();
         boolean[] tester = FrameUtils.convertImageToBooleanArray(image);
@@ -32,9 +33,5 @@ public class FrameUtilsTest {
         boolean[] expected = {true,false,false,true,false,true,false,true,true,true,false,false};
 
         assertArrayEquals(expected,tester);
-    }
-
-    @org.junit.jupiter.api.Test
-    public void removeNoise() {
     }
 }

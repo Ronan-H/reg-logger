@@ -15,7 +15,6 @@ public class CarDataUtilsTest {
         CarData tester = CarDataUtils.generateCarData(image);
         CarData expected = new CarData(145,229,40,71);
 
-
         assertTrue(expected.equals(tester));
     }
 
@@ -26,7 +25,6 @@ public class CarDataUtilsTest {
         CarDataSeries seriesTest = new CarDataSeries();
         FrameTimeManager FTMTest = new FrameTimeManager(10);
         CarEstimate carTester = CarDataUtils.generateCarEstimate(seriesTest,FTMTest);
-
 
         //assertEquals(,carTester);
     }

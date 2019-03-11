@@ -9,7 +9,7 @@ public class CaptureWaitEstimator {
     private CarDataSeries carDataSeries;
     private FrameTimeManager frameTimeManager;
 
-    public CaptureWaitEstimator(int numEstimateFrames) {
+    public CaptureWaitEstimator(int numEstimateFrames, int capturePoint) {
         this.numEstimateFrames = numEstimateFrames;
         carDataSeries = new CarDataSeries();
         // TODO: don't hard code buffer size
@@ -30,4 +30,7 @@ public class CaptureWaitEstimator {
         return temp;
     }
 
+    public int regDistToCapturePoint(){
+        return 0;
+    }
 }
