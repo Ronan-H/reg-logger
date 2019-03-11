@@ -1,7 +1,6 @@
 package ronan_tommey.reg_logger.car_data;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -45,7 +44,7 @@ class CarEstimateTest {
         assertEquals(speed, car.getPixelSpeed(),0.1);
     }
 
-    @Ignore
+    @Disabled
     @Test
     void getKmphSpeed() {
         fail();
