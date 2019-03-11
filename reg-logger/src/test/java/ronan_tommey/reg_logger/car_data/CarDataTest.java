@@ -2,7 +2,7 @@ package ronan_tommey.reg_logger.car_data;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CarDataTest {
@@ -12,7 +12,7 @@ public class CarDataTest {
     int top = 40;
     int bottom = 71;
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testCarData() throws IOException {
 
         BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
@@ -22,7 +22,7 @@ public class CarDataTest {
         assertEquals(expected,tester);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testGetLeftX() throws IOException {
 
         BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
@@ -32,7 +32,7 @@ public class CarDataTest {
         assertEquals(left, testedLeft);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testGetRightX() throws IOException {
         BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
         CarData tester = CarDataUtils.generateCarData(image);
@@ -41,7 +41,7 @@ public class CarDataTest {
         assertEquals(right,testedRight);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testGetTopY() throws IOException {
 
         BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
@@ -51,7 +51,7 @@ public class CarDataTest {
         assertEquals(testedTop,top);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testGetBottomY() throws IOException {
         BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
         CarData tester = CarDataUtils.generateCarData(image);
@@ -60,7 +60,7 @@ public class CarDataTest {
         assertEquals(bottom,testedBottom);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testGetWidth() throws IOException {
 
         BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");

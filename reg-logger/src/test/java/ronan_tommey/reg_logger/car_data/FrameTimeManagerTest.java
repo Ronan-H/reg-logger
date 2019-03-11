@@ -1,19 +1,20 @@
 package ronan_tommey.reg_logger.car_data;
 
 import ronan_tommey.reg_logger.car_data.FrameTimeManager;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FrameTimeManagerTest {
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testEmptyTimeBuffer() {
         FrameTimeManager frameTimeManager = new FrameTimeManager(10);
 
         assertEquals(FrameTimeManager.EXPECTED_FRAME_TIME, frameTimeManager.getTimeDuration(5));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testGetTimeDurationSimple() {
         int bufferSize = 10;
         FrameTimeManager frameTimeManager = new FrameTimeManager(bufferSize);
@@ -25,7 +26,7 @@ class FrameTimeManagerTest {
         assertEquals(12345, frameTimeManager.getTimeDuration(bufferSize));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testGetTimeDurationComplex() {
         // total: 225
         // mean: 45
@@ -43,7 +44,7 @@ class FrameTimeManagerTest {
         assertEquals(expectedMean, frameTimeManager.getTimeDuration(bufferSize));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testPartiallyFilledBuffer() {
         int bufferSize = 500;
         int fillAmount = 350;
@@ -60,7 +61,7 @@ class FrameTimeManagerTest {
         assertEquals(time, frameTimeManager.getTimeDuration(usingAmount));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testRequestedDurationBiggerThanBuffer() {
         int bufferSize = 500;
         int fillAmount = 350;
