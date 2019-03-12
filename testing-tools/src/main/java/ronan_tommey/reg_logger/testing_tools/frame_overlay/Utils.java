@@ -1,4 +1,6 @@
-package ronan_tommey.reg_logger.car_data;
+package ronan_tommey.reg_logger.testing_tools.frame_overlay;
+
+import ronan_tommey.reg_logger.car_data.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -7,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Random;
 
 public class Utils {
 
@@ -66,22 +67,4 @@ public class Utils {
 
         return images;
     }
-
-    public static CarEstimate TestCarDirectionRight(BufferedImage[] frames)
-    {
-        CarDataSeries tester = new CarDataSeries();
-
-        for(int i=0; i < frames.length; i++)
-        {
-            BufferedImage image = frames[i];
-            CarData data = CarDataUtils.generateCarData(image);
-            tester.addNextCarData(data);
-        }
-
-        FrameTimeManager timeTest = new FrameTimeManager(10);
-        CarEstimate car = CarDataUtils.generateCarEstimate(tester, timeTest);
-
-        return car;
-    }
-
 }
