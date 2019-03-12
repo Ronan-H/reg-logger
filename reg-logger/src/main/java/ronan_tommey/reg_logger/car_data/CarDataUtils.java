@@ -65,7 +65,8 @@ public class CarDataUtils {
         double rightEndDistance = last.getRightX() - first.getRightX();
         double leftEndDistance = last.getLeftX() - first.getLeftX();
 
-        // use whichever value is bigger, so if the car is emergin from the side of the screen,
+        // figure out car's direction based on speed (positive/negative)
+        // use whichever value is bigger, so if the car is emerging from the side of the screen,
         // the appropriate value will be used
         if (Math.abs(rightEndDistance) > Math.abs(leftEndDistance)) {
             distance = rightEndDistance;
@@ -78,10 +79,14 @@ public class CarDataUtils {
         // (otherwise, it is going left)
         boolean goingRight = (distance > 0);
 
+        // ensure the distance from the front of the car is being used instead of the back
+        distance = (goingRight ? rightEndDistance : leftEndDistance);
+
         // calculate the speed of the car, in pixels per frame
         double pixelSpeed = distance / (carDataSeries.size() - 1);
 
         // TODO: calculate kmph speed
+
         CarEstimate carEstimate = new CarEstimate(goingRight, pixelSpeed, 0);
 
         return carEstimate;
