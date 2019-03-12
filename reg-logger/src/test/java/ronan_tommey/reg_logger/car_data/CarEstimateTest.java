@@ -13,7 +13,7 @@ class CarEstimateTest {
     void isGoingRight() throws IOException {
         BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/car-data-utils/frames-for-car-going-right");
 
-        CarEstimate car = Utils.TestCarDirectionRight(frames);
+        CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
 
         assertTrue(car.isGoingRight());
     }
@@ -22,13 +22,13 @@ class CarEstimateTest {
     void isGoingLeft() throws IOException {
         BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/car-data-utils/frames-for-car-going-left");
 
-        CarEstimate car = Utils.TestCarDirectionRight(frames);
+        CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
 
         assertFalse(car.isGoingRight());
     }
 
     @Test
-    void getPixelSpeed() throws IOException {
+    void getPixelSpeed4Frames() throws IOException {
         BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/four-frames");
 
         //Values of car position (Car Going right)
@@ -39,7 +39,24 @@ class CarEstimateTest {
 
         double speed = distanceInFrames/(frames.length-1);
 
-        CarEstimate car = Utils.TestCarDirectionRight(frames);
+        CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
+
+        assertEquals(speed, car.getPixelSpeed(),0.1);
+    }
+
+    @Test
+    void getPixelSpeed2Frames() throws IOException {
+        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/two-frames");
+
+        //Values of car position (Car Going right)
+        int firstX = 98;
+        int secondX = 113;
+
+        int distanceInFrames = secondX - firstX;
+
+        double speed = distanceInFrames/(frames.length-1);
+
+        CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
 
         assertEquals(speed, car.getPixelSpeed(),0.1);
     }

@@ -67,7 +67,7 @@ public class Utils {
         return images;
     }
 
-    public static CarEstimate TestCarDirectionRight(BufferedImage[] frames)
+    public static CarEstimate getCarEstimateForImageFrames(BufferedImage[] frames)
     {
         CarDataSeries tester = new CarDataSeries();
 
