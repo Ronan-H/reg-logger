@@ -33,11 +33,11 @@ class CarEstimateTest {
 
         //Values of car position (Car Going right)
         int firstX = 98;
-        int secondX = 113;
+        int secondX = 112;
 
         int distanceInFrames = secondX - firstX;
 
-        double speed = distanceInFrames/(frames.length-1);
+        double speed = (double)distanceInFrames/(frames.length-1);
 
         CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
 
@@ -50,11 +50,11 @@ class CarEstimateTest {
 
         //Values of car position (Car Going right)
         int firstX = 98;
-        int secondX = 113;
+        int secondX = 112;
 
         int distanceInFrames = secondX - firstX;
 
-        double speed = distanceInFrames/(frames.length-1);
+        double speed = (double)distanceInFrames/(frames.length-1);
 
         CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
 
@@ -66,12 +66,12 @@ class CarEstimateTest {
         BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/frames-for-testing/four-frames-going-left");
 
         //Variables
-        int firstX = 194;
-        int secondX = 173;
+        int firstX = 106;
+        int secondX = 84;
 
         int distanceInFrames = secondX - firstX;
 
-        double speed = distanceInFrames/(frames.length-1);
+        double speed = (double)distanceInFrames/(frames.length-1);
 
         CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
 
