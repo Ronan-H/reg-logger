@@ -19,7 +19,7 @@ public class PiCamFrameStreamer implements Runnable{
         this.camListener = camListener;
 
         String[] command = { "/bin/sh", "-c",
-                String.format("raspivid -o - -t 0 -cd MJPEG -w %d -h %d -fps 25", frameWidth, frameHeight) };
+                String.format("raspivid -o - -t 0 -cd MJPEG -w %d -h %d -fps 25 -hf -vf", frameWidth, frameHeight) };
         Runtime rt = Runtime.getRuntime();
         Process proc;
         try {
