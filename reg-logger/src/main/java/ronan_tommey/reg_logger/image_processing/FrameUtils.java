@@ -172,7 +172,15 @@ public class FrameUtils {
         private boolean[] movingPixels;
         private int minClusterSize;
 
-        private final int[] offsets;
+        private final short[] offsets;
+
+        // pixel indexes that have already been processed; used for efficiency
+        private boolean[] processed;
+        // number of pixels in the frame
+        private final int numPixels;
+        // double ended stack used to keep track of visited and unvisited indexes
+        // (visited indexes use the start of the array, unvisited indexes used the end)
+        private short[] stack;
 
         /**
          * @param movingPixels Frame as boolean array
@@ -183,30 +191,27 @@ public class FrameUtils {
             this.movingPixels = movingPixels;
             this.minClusterSize = minClusterSize;
 
+            numPixels = movingPixels.length;
+
             // calculate offsets for use in finding adjacent pixels in the array
-            offsets = new int[] {-1, +1, -imageWidth, +imageWidth};
+            offsets = new short[] {-1, +1, (short) -imageWidth, (short) +imageWidth};
+
+            stack = new short[numPixels];
+            processed = new boolean[numPixels];
         }
 
         /**
          * Removes noise in the frame, based on the passed in constructor arguments.
          */
         void removeNoise() {
-            // pixel indexes that have already been processed; used for efficiency
-            boolean[] processed = new boolean[movingPixels.length];
-
-            // lopo through each pixel, checking for small clusters
-            for (int i = 0; i < movingPixels.length; i++) {
+            // loop through each pixel, checking for small clusters
+            for (short i = 0; i < movingPixels.length; i++) {
                 if (movingPixels[i] && !processed[i]) {
                     // this cluster must be processed
 
                     // call small cluster removal method, getting back a list of
                     // visited/processed indexes
-                    Deque<Integer> visited = removeClusterIfSmall(i);
-
-                    // mark off each visited index to ensure they don't get processed again
-                    for (int j : visited) {
-                        processed[j] = true;
-                    }
+                    removeClusterIfSmall(i);
                 }
             }
         }
@@ -217,52 +222,55 @@ public class FrameUtils {
          * be removed, and removes the cluster if it is.
          *
          * @param startIndex Starting index
-         * @return Deque of visited pixels
          */
-        private Deque<Integer> removeClusterIfSmall(int startIndex) {
-            // visited indexes
+        private void removeClusterIfSmall(short startIndex) {
+            // visited indexes; index is visited if marked[index] == true
             boolean[] marked = new boolean[movingPixels.length];
 
-            // stack of discovered neighbour pixels that need to be visited in turn
-            Deque<Integer> unvisited = new ArrayDeque<>();
-            // stack of pixels that we've already visited
-            Deque<Integer> visited = new ArrayDeque<>();
+            // head of stack for visited and unvisited indexes
+            int visitedHead = 0;
+            int unvisitedHead = numPixels - 1;
 
             // push starting index
-            unvisited.push(startIndex);
+            stack[unvisitedHead--] = startIndex;
             marked[startIndex] = true;
 
-            int index, newIndex;
+            short index, newIndex;
 
             // while there are still pixels whose neighbours we haven't pushed yet...
-            while (!unvisited.isEmpty()) {
+            // (or, "while the unvisited head isn't where it started from")
+            while (unvisitedHead < numPixels - 1) {
                 // visit this pixel
-                index = unvisited.pop();
-                visited.push(index);
+                // (pop index from unvisited and push to visited)
+                index = stack[++unvisitedHead];
+                stack[visitedHead++] = index;
 
                 // search through pixel's neighbours to see if they're part of the cluster
                 // (offsets, when added, find the pixel to the left, right, up and down)
-                for (int offset : offsets) {
-                    newIndex = index + offset;
+                for (short offset : offsets) {
+                    newIndex = (short) (index + offset);
 
                     if (newIndex >= 0 && newIndex < movingPixels.length // check if pixel is in bounds
                             && movingPixels[newIndex] // check if pixel is moving
                             && !marked[newIndex]) { // check if pixel has not been processed yet
-                        // push neighbouring pixel (part of the cluster)
-                        unvisited.push(newIndex);
+                        // push neighbouring pixel to the stack (part of the cluster)
+                        stack[unvisitedHead--] = newIndex;
                         marked[newIndex] = true;
                     }
                 }
             }
 
             // remove cluster if it's smaller than the specified minimum size for clusters
-            if (visited.size() < minClusterSize) {
-                for (int removalIndex : visited) {
-                    movingPixels[removalIndex] = false;
+            if (visitedHead < minClusterSize) {
+                for (int i = 0; i < visitedHead; i++) {
+                    movingPixels[stack[i]] = false;
                 }
             }
-            
-            return visited;
+
+            // mark off each visited index to ensure they don't get processed again
+            for (int i = 0; i < visitedHead; i++) {
+                processed[stack[i]] = true;
+            }
         }
     }
 }
