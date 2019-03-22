@@ -62,7 +62,14 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
 
         BufferedImage movementImage = movementHighlighter.getHighlightedImage(frame);
 
-        CarData data = CarDataUtils.generateCarData(movementImage);
+        // boolean array representation of the passed in image, where "true"
+        // means the car covers that pixel, and "false" if it doesn't. array is
+        // one dimension, with increasing indexes going left to right first, then
+        // down, on the passed in image (ie. x = i % width, y = i / width)
+        boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(movementImage);
+        FrameUtils.removeNoise(movingPixels, frame.getWidth(), 125);
+
+        CarData data = CarDataUtils.generateCarData(movingPixels, frame.getWidth());
 
         estimator.addNextFrameData(data,delta);
 

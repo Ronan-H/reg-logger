@@ -17,7 +17,6 @@ public class CaptureWaitEstimator {
     }
 
     public void addNextFrameData(CarData carData, long delta) {
-        carDataSeries.addNextCarData(carData);
         frameTimeManager.addFrameTime(delta);
 
         if(carData == null) {

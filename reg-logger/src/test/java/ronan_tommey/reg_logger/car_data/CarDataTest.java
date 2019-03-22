@@ -3,6 +3,8 @@ package ronan_tommey.reg_logger.car_data;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import org.junit.jupiter.api.*;
+import ronan_tommey.reg_logger.image_processing.FrameUtils;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CarDataTest {
@@ -16,7 +18,8 @@ public class CarDataTest {
     void testCarData() throws IOException {
 
         BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
-        CarData tester = CarDataUtils.generateCarData(image);
+        boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(image);
+        CarData tester = CarDataUtils.generateCarData(movingPixels, image.getWidth());
         CarData expected = new CarData(left,right,top,bottom);
 
         assertEquals(expected,tester);
@@ -26,7 +29,8 @@ public class CarDataTest {
     void testGetLeftX() throws IOException {
 
         BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
-        CarData tester = CarDataUtils.generateCarData(image);
+        boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(image);
+        CarData tester = CarDataUtils.generateCarData(movingPixels, image.getWidth());
         int testedLeft = tester.getLeftX();
 
         assertEquals(left, testedLeft);
@@ -35,7 +39,8 @@ public class CarDataTest {
     @Test
     void testGetRightX() throws IOException {
         BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
-        CarData tester = CarDataUtils.generateCarData(image);
+        boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(image);
+        CarData tester = CarDataUtils.generateCarData(movingPixels, image.getWidth());
         int testedRight = tester.getRightX();
 
         assertEquals(right,testedRight);
@@ -45,7 +50,8 @@ public class CarDataTest {
     void testGetTopY() throws IOException {
 
         BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
-        CarData tester = CarDataUtils.generateCarData(image);
+        boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(image);
+        CarData tester = CarDataUtils.generateCarData(movingPixels, image.getWidth());
         int testedTop = tester.getTopY();
 
         assertEquals(testedTop,top);
@@ -54,7 +60,8 @@ public class CarDataTest {
     @Test
     void testGetBottomY() throws IOException {
         BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
-        CarData tester = CarDataUtils.generateCarData(image);
+        boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(image);
+        CarData tester = CarDataUtils.generateCarData(movingPixels, image.getWidth());
         int testedBottom = tester.getBottomY();
 
         assertEquals(bottom,testedBottom);
@@ -64,7 +71,8 @@ public class CarDataTest {
     void testGetWidth() throws IOException {
 
         BufferedImage image = Utils.readTestImage("./src/test/input/car-data-utils/generate-car-data/pi-cam-image-1.png");
-        CarData tester = CarDataUtils.generateCarData(image);
+        boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(image);
+        CarData tester = CarDataUtils.generateCarData(movingPixels, image.getWidth());
 
         //Values being tested
         int testedLeft = tester.getLeftX();

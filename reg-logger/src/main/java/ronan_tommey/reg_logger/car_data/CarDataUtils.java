@@ -9,23 +9,14 @@ public class CarDataUtils {
     /**
      * Generated a CarData object from a black and white image
      * showing a car.
-     * @param image Image to create a CarData object from
+     * @param movingPixels Image to create a CarData object from
      * @return The generated CarData object
      */
-    public static CarData generateCarData(BufferedImage image){
-        // boolean array representation of the passed in image, where "true"
-        // means the car covers that pixel, and "false" if it doesn't. array is
-        // one dimension, with increasing indexes going left to right first, then
-        // down, on the passed in image (ie. x = i % width, y = i / width)
-        boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(image);
-        FrameUtils.removeNoise(movingPixels, image.getWidth(), 125);
-
+    public static CarData generateCarData(boolean[] movingPixels, int imageWidth){
         if(FrameUtils.countMoving(movingPixels) == 0)
         {
             return null;
         }
-
-        int imgWidth = image.getWidth();
 
         // variables to set and later load into a new CarData object
         int leftX = Integer.MAX_VALUE;
@@ -39,8 +30,8 @@ public class CarDataUtils {
         for (int i = 0; i < movingPixels.length; ++i) {
             if (movingPixels[i]) {
                 // pixels moving; update CarData variables
-                x = i % imgWidth;
-                y = i / imgWidth;
+                x = i % imageWidth;
+                y = i / imageWidth;
 
                 if (x < leftX) {
                     leftX = x;

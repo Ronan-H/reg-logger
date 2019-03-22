@@ -1,5 +1,7 @@
 package ronan_tommey.reg_logger.car_data;
 
+import ronan_tommey.reg_logger.image_processing.FrameUtils;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -74,7 +76,7 @@ public class Utils {
         for(int i=0; i < frames.length; i++)
         {
             BufferedImage image = frames[i];
-            CarData data = CarDataUtils.generateCarData(image);
+            CarData data = CarDataUtils.generateCarData(FrameUtils.convertImageToBooleanArray(image), image.getWidth());
             tester.addNextCarData(data);
         }
 
