@@ -8,7 +8,6 @@ import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 
 /**
  * Utilities class for processing individual frames, including functions like
@@ -180,7 +179,7 @@ public class FrameUtils {
         private final int numPixels;
         // double ended stack used to keep track of visited and unvisited indexes
         // (visited indexes use the start of the array, unvisited indexes used the end)
-        private short[] stack;
+        private int[] stack;
 
         /**
          * @param movingPixels Frame as boolean array
@@ -196,7 +195,7 @@ public class FrameUtils {
             // calculate offsets for use in finding adjacent pixels in the array
             offsets = new short[] {-1, +1, (short) -imageWidth, (short) +imageWidth};
 
-            stack = new short[numPixels];
+            stack = new int[numPixels];
             processed = new boolean[numPixels];
         }
 
@@ -205,7 +204,7 @@ public class FrameUtils {
          */
         void removeNoise() {
             // loop through each pixel, checking for small clusters
-            for (short i = 0; i < movingPixels.length; i++) {
+            for (int i = 0; i < movingPixels.length; i++) {
                 if (movingPixels[i] && !processed[i]) {
                     // this cluster must be processed
 
@@ -223,7 +222,7 @@ public class FrameUtils {
          *
          * @param startIndex Starting index
          */
-        private void removeClusterIfSmall(short startIndex) {
+        private void removeClusterIfSmall(int startIndex) {
             // visited indexes; index is visited if marked[index] == true
             boolean[] marked = new boolean[movingPixels.length];
 
@@ -235,7 +234,7 @@ public class FrameUtils {
             stack[unvisitedHead--] = startIndex;
             marked[startIndex] = true;
 
-            short index, newIndex;
+            int index, newIndex;
 
             // while there are still pixels whose neighbours we haven't pushed yet...
             // (or, "while the unvisited head isn't where it started from")
@@ -248,7 +247,7 @@ public class FrameUtils {
                 // search through pixel's neighbours to see if they're part of the cluster
                 // (offsets, when added, find the pixel to the left, right, up and down)
                 for (short offset : offsets) {
-                    newIndex = (short) (index + offset);
+                    newIndex = index + offset;
 
                     if (newIndex >= 0 && newIndex < movingPixels.length // check if pixel is in bounds
                             && movingPixels[newIndex] // check if pixel is moving

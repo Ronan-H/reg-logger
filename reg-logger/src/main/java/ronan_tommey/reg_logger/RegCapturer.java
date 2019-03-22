@@ -16,21 +16,15 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
     private BufferedImage nextFrame;
     private long nextFrameDelta;
 
-    private Dimension scaledFrameDim;
     private long frameCounter = 0;
     private boolean running;
 
     private static final int numIgnoreFirst = 25 * 5;
 
-    public RegCapturer(int capWidth, int capHeight, double frameScaling) {
+    public RegCapturer(int capWidth, int capHeight) {
         piCamFrameStreamer = new PiCamFrameStreamer(capWidth, capHeight, this);
 
-        scaledFrameDim = new Dimension(
-                (int) Math.round(capWidth * frameScaling),
-                (int) Math.round(capHeight * frameScaling)
-        );
-
-        movementHighlighter = new MovementHighlighter(scaledFrameDim.width, scaledFrameDim.height);
+        movementHighlighter = new MovementHighlighter(capWidth, capHeight);
     }
 
     public void run() {
@@ -51,29 +45,30 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
 
             processFrame(nextFrame, nextFrameDelta);
             frameCounter++;
+            nextFrame = null;
         }
     }
 
     private void processFrame(BufferedImage frame, long delta) {
-        BufferedImage scaledFrame = FrameUtils.scaleImage(frame, scaledFrameDim);
-        BufferedImage movementImage = movementHighlighter.getHighlightedImage(scaledFrame);
-
         if (frameCounter < numIgnoreFirst) {
             // ignore frame
             return;
         }
 
+        BufferedImage movementImage = movementHighlighter.getHighlightedImage(frame);
+
         boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(movementImage);
-        FrameUtils.removeNoise(movingPixels, scaledFrame.getWidth(), 125);
+        FrameUtils.removeNoise(movingPixels, frame.getWidth(), 125);
 
         try {
             int movingPixelCount = FrameUtils.countMoving(movingPixels);
+
             if (movingPixelCount > 0) {
                 System.out.println("Moving pixel count: " + movingPixelCount);
 
-                FrameUtils.saveImage(scaledFrame, String.format("./test-images/scaled/scaled_%d.png", frameCounter));
+                FrameUtils.saveImage(frame, String.format("./test-images/scaled/scaled_%d.png", frameCounter));
                 FrameUtils.saveImage(movementImage, String.format("./test-images/movement/movement_%d.png", frameCounter));
-                FrameUtils.saveBoolArrayAsImage(movingPixels, scaledFrame.getWidth(), String.format("./test-images/noise-removed/noise-rem_%d.png", frameCounter));
+                FrameUtils.saveBoolArrayAsImage(movingPixels, frame.getWidth(), String.format("./test-images/noise-removed/noise-rem_%d.png", frameCounter));
             }
         } catch (IOException e) {
             e.printStackTrace();
