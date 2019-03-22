@@ -18,6 +18,12 @@ public class CarDataUtils {
         // one dimension, with increasing indexes going left to right first, then
         // down, on the passed in image (ie. x = i % width, y = i / width)
         boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(image);
+        FrameUtils.removeNoise(movingPixels, image.getWidth(), 125);
+
+        if(FrameUtils.countMoving(movingPixels) == 0)
+        {
+            return null;
+        }
 
         int imgWidth = image.getWidth();
 

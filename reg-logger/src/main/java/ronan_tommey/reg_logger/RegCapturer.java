@@ -1,5 +1,6 @@
 package ronan_tommey.reg_logger;
 
+import ronan_tommey.reg_logger.car_data.*;
 import ronan_tommey.reg_logger.image_processing.FrameUtils;
 import ronan_tommey.reg_logger.image_processing.MovementHighlighter;
 import ronan_tommey.reg_logger.image_processing.PiCamFrameListener;
@@ -18,6 +19,8 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
 
     private long frameCounter = 0;
     private boolean running;
+    private CaptureWaitEstimator estimator;
+    private static final long maxEstimateBeforeCapture = 100*1000000;
 
     private static final int numIgnoreFirst = 25 * 5;
 
@@ -25,6 +28,8 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
         piCamFrameStreamer = new PiCamFrameStreamer(capWidth, capHeight, this);
 
         movementHighlighter = new MovementHighlighter(capWidth, capHeight);
+
+        estimator = new CaptureWaitEstimator(4, 304);
     }
 
     public void run() {
@@ -57,22 +62,21 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
 
         BufferedImage movementImage = movementHighlighter.getHighlightedImage(frame);
 
-        boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(movementImage);
-        FrameUtils.removeNoise(movingPixels, frame.getWidth(), 125);
+        CarData data = CarDataUtils.generateCarData(movementImage);
 
-        try {
-            int movingPixelCount = FrameUtils.countMoving(movingPixels);
+        estimator.addNextFrameData(data,delta);
 
-            if (movingPixelCount > 0) {
-                System.out.println("Moving pixel count: " + movingPixelCount);
-
-                FrameUtils.saveImage(frame, String.format("./test-images/scaled/scaled_%d.png", frameCounter));
-                FrameUtils.saveImage(movementImage, String.format("./test-images/movement/movement_%d.png", frameCounter));
-                FrameUtils.saveBoolArrayAsImage(movingPixels, frame.getWidth(), String.format("./test-images/noise-removed/noise-rem_%d.png", frameCounter));
+        if(estimator.estimateReady())
+        {
+            long estimate = estimator.getWaitEstimate();
+            if(estimate < maxEstimateBeforeCapture)
+            {
+                // TODO: 22/03/2019 Lock in capture estimate
+                estimator.onCapture();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
+
     }
 
     public synchronized void onFrameRead(BufferedImage image, long delta) {
