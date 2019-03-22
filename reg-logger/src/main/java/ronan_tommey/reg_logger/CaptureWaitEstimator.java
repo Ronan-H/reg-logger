@@ -13,7 +13,7 @@ public class CaptureWaitEstimator {
         carDataSeries = new CarDataSeries();
         // TODO: don't hard code buffer size
         frameTimeManager = new FrameTimeManager(350);
-        allowCapture = false;
+        allowCapture = true;
     }
 
     public void addNextFrameData(CarData carData, long delta) {
