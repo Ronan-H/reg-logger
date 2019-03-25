@@ -6,9 +6,7 @@ import ronan_tommey.reg_logger.image_processing.MovementHighlighter;
 import ronan_tommey.reg_logger.image_processing.PiCamFrameListener;
 import ronan_tommey.reg_logger.image_processing.PiCamFrameStreamer;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class RegCapturer implements PiCamFrameListener, Runnable {
     private PiCamFrameStreamer piCamFrameStreamer;
@@ -20,16 +18,19 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
     private long frameCounter = 0;
     private boolean running;
     private CaptureWaitEstimator estimator;
-    private static final long maxEstimateBeforeCapture = 100*1000000;
-
+    private static final long maxEstimateBeforeCapture = 100 * 1000000;
     private static final int numIgnoreFirst = 25 * 5;
+
+    private static final int DSLR_CAPTURE_LATENCY = 600 * 1000000;
+    private static final int LAN_LATENCY = 10 * 1000000;
+    private static final int TOTAL_CAPTURE_LATENCY = DSLR_CAPTURE_LATENCY + LAN_LATENCY;
 
     public RegCapturer(int capWidth, int capHeight) {
         piCamFrameStreamer = new PiCamFrameStreamer(capWidth, capHeight, this);
 
         movementHighlighter = new MovementHighlighter(capWidth, capHeight);
 
-        estimator = new CaptureWaitEstimator(4, 304);
+        estimator = new CaptureWaitEstimator(4, 304, capWidth, TOTAL_CAPTURE_LATENCY);
     }
 
     public void run() {
@@ -71,7 +72,7 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
 
         CarData data = CarDataUtils.generateCarData(movingPixels, frame.getWidth());
 
-        estimator.addNextFrameData(data,delta);
+        estimator.addNextFrameData(data, movingPixels, delta);
 
         if(estimator.estimateReady())
         {

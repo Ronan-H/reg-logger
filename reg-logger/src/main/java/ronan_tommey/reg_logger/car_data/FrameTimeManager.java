@@ -17,15 +17,15 @@ public class FrameTimeManager {
         delays = new LinkedList<Long>();
     }
 
-    public void addFrameTime(long delay) {
-        delays.add(delay);
+    public void addFrameDelta(long delta) {
+        delays.add(delta);
 
         while (delays.size() > bufferSize) {
             delays.remove(0);
         }
     }
 
-    public long getTimeDuration(int numFrames) {
+    public long getAverageFrameDelta(int numFrames) {
         if (delays.size() == 0) {
             // no frame times in buffer; return expected frame time
             return EXPECTED_FRAME_TIME;
@@ -41,7 +41,7 @@ public class FrameTimeManager {
             total += delays.get(i);
         }
 
-        avg = Math.round((double)total / numUsed);
+        avg = total / numUsed;
 
         return avg;
     }

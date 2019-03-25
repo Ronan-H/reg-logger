@@ -1,6 +1,5 @@
 package ronan_tommey.reg_logger.car_data;
 
-import ronan_tommey.reg_logger.car_data.FrameTimeManager;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,7 +10,7 @@ class FrameTimeManagerTest {
     void testEmptyTimeBuffer() {
         FrameTimeManager frameTimeManager = new FrameTimeManager(10);
 
-        assertEquals(FrameTimeManager.EXPECTED_FRAME_TIME, frameTimeManager.getTimeDuration(5));
+        assertEquals(FrameTimeManager.EXPECTED_FRAME_TIME, frameTimeManager.getAverageFrameDelta(5));
     }
 
     @Test
@@ -20,10 +19,10 @@ class FrameTimeManagerTest {
         FrameTimeManager frameTimeManager = new FrameTimeManager(bufferSize);
 
         for (int i = 0; i < bufferSize; i++) {
-            frameTimeManager.addFrameTime(12345);
+            frameTimeManager.addFrameDelta(12345);
         }
 
-        assertEquals(12345, frameTimeManager.getTimeDuration(bufferSize));
+        assertEquals(12345, frameTimeManager.getAverageFrameDelta(bufferSize));
     }
 
     @Test
@@ -38,10 +37,10 @@ class FrameTimeManagerTest {
         FrameTimeManager frameTimeManager = new FrameTimeManager(bufferSize);
 
         for (Long time : times) {
-            frameTimeManager.addFrameTime(time);
+            frameTimeManager.addFrameDelta(time);
         }
 
-        assertEquals(expectedMean, frameTimeManager.getTimeDuration(bufferSize));
+        assertEquals(expectedMean, frameTimeManager.getAverageFrameDelta(bufferSize));
     }
 
     @Test
@@ -55,10 +54,10 @@ class FrameTimeManagerTest {
         FrameTimeManager frameTimeManager = new FrameTimeManager(bufferSize);
 
         for (int i = 0; i < fillAmount; i++) {
-            frameTimeManager.addFrameTime(time);
+            frameTimeManager.addFrameDelta(time);
         }
 
-        assertEquals(time, frameTimeManager.getTimeDuration(usingAmount));
+        assertEquals(time, frameTimeManager.getAverageFrameDelta(usingAmount));
     }
 
     @Test
@@ -72,9 +71,9 @@ class FrameTimeManagerTest {
         FrameTimeManager frameTimeManager = new FrameTimeManager(bufferSize);
 
         for (int i = 0; i < fillAmount; i++) {
-            frameTimeManager.addFrameTime(time);
+            frameTimeManager.addFrameDelta(time);
         }
 
-        assertEquals(time, frameTimeManager.getTimeDuration(usingAmount));
+        assertEquals(time, frameTimeManager.getAverageFrameDelta(usingAmount));
     }
 }

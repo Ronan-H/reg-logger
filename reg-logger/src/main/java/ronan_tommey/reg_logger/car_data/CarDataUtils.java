@@ -88,4 +88,27 @@ public class CarDataUtils {
 
         return carEstimate;
     }
+
+    public static int getRegPosEstimate(CarEstimate carEstimate, CarData carData, boolean[] movingPixels, int imageWidth) {
+        final double shadowCuttoffRatio = 0.4;
+
+        int carHeight = carData.getBottomY() - carData.getTopY();
+
+        int colHeight;
+
+        for (int scanX = carData.getLeftX(); scanX < carData.getRightX(); ++scanX) {
+            for (int scanY = carData.getTopY(); scanY < carData.getBottomY(); ++scanY) {
+                if (movingPixels[scanY * imageWidth + scanX]) {
+                    colHeight = carHeight - (scanY - carData.getTopY());
+
+                    if ((double) colHeight / carHeight > shadowCuttoffRatio) {
+                        return scanX;
+                    }
+                }
+            }
+        }
+
+        System.err.println("Error while estimating car reg pos: var was never set");
+        return -1;
+    }
 }
