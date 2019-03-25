@@ -8,5 +8,11 @@
     <artifactId>remote-camera</artifactId>
     <version>1.0</version>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.gphoto</groupId>
+            <artifactId>gphoto2-java</artifactId>
+            <version>1.5</version>
+        </dependency>
+    </dependencies>
 </project>
