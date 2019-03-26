@@ -5,19 +5,16 @@ import ronan_tommey.reg_logger.image_processing.FrameUtils;
 import ronan_tommey.reg_logger.image_processing.MovementHighlighter;
 import ronan_tommey.reg_logger.image_processing.PiCamFrameListener;
 import ronan_tommey.reg_logger.image_processing.PiCamFrameStreamer;
+import ronan_tommey.reg_logger.reg_logging.AsyncALPRCaptureLogger;
+import ronan_tommey.reg_logger.reg_logging.CarPassDatabase;
+import ronan_tommey.reg_logger.reg_logging.CarPassDetails;
+import ronan_tommey.reg_logger.reg_logging.CarPassLogger;
 
 import java.awt.image.BufferedImage;
+import java.util.Calendar;
 
 public class RegCapturer implements PiCamFrameListener, Runnable {
-    private PiCamFrameStreamer piCamFrameStreamer;
-    private MovementHighlighter movementHighlighter;
-
-    private BufferedImage nextFrame;
-    private long nextFrameDelta;
-
-    private long frameCounter = 0;
-    private boolean running;
-    private CaptureWaitEstimator estimator;
+    private static final long minEstimateBeforeCapture = -100 * 1000000;
     private static final long maxEstimateBeforeCapture = 100 * 1000000;
     private static final int numIgnoreFirst = 25 * 5;
 
@@ -25,14 +22,32 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
     private static final int LAN_LATENCY = 10 * 1000000;
     private static final int TOTAL_CAPTURE_LATENCY = DSLR_CAPTURE_LATENCY + LAN_LATENCY;
 
+    public static final int REMOTE_CAMERA_PORT = 52197;
+
+    private PiCamFrameStreamer piCamFrameStreamer;
+    private MovementHighlighter movementHighlighter;
+
+    private BufferedImage nextFrame;
+    private long nextFrameDelta;
+
+    private long frameCounter = 0;
+    private CaptureWaitEstimator estimator;
+    private RemoteCamera remoteCamera;
+    private CarPassLogger carPassLogger;
+    private AsyncALPRCaptureLogger captureLogger;
+    private boolean running;
+
     public RegCapturer(int capWidth, int capHeight) {
         piCamFrameStreamer = new PiCamFrameStreamer(capWidth, capHeight, this);
-
         movementHighlighter = new MovementHighlighter(capWidth, capHeight);
-
         estimator = new CaptureWaitEstimator(4, 304, capWidth, TOTAL_CAPTURE_LATENCY);
+        remoteCamera = new RemoteCamera(REMOTE_CAMERA_PORT);
+        carPassLogger = new CarPassDatabase();
+        captureLogger = new AsyncALPRCaptureLogger(remoteCamera, carPassLogger);
+        new Thread(captureLogger).start();
     }
 
+    @Override
     public void run() {
         running = true;
 
@@ -76,10 +91,19 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
 
         if(estimator.estimateReady())
         {
-            long estimate = estimator.getWaitEstimate();
-            if(estimate < maxEstimateBeforeCapture)
+            CarEstimate carEstimate = estimator.generateCarEstimate();
+            long waitEstimate = estimator.getWaitEstimate();
+            if(waitEstimate > minEstimateBeforeCapture && waitEstimate < maxEstimateBeforeCapture)
             {
-                // TODO: 22/03/2019 Lock in capture estimate
+                CarPassDetails carPassDetails = new CarPassDetails(
+                        Calendar.getInstance().getTimeInMillis(),
+                        carEstimate.isGoingRight() ? "Right" : "Left",
+                        carEstimate.getPixelSpeed(),
+                        carEstimate.getKmphSpeed()
+                );
+
+                captureLogger.capturePass(carPassDetails, waitEstimate);
+
                 estimator.onCapture();
             }
         }

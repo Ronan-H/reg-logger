@@ -9,6 +9,7 @@ public class CaptureWaitEstimator {
     private long captureLatency;
     private CarDataSeries carDataSeries;
     private boolean[] lastMovingPixels;
+    private CarEstimate lastCarEstimate;
     private FrameTimeManager frameTimeManager;
     private boolean allowCapture;
 
@@ -47,11 +48,15 @@ public class CaptureWaitEstimator {
         return carDataSeries.size() >= numEstimateFrames && allowCapture;
     }
 
-    public long getWaitEstimate(){
+    public CarEstimate generateCarEstimate(){
         CarEstimate carEstimate = CarDataUtils.generateCarEstimate(carDataSeries, frameTimeManager);
-        int regPosEstimate = CarDataUtils.getRegPosEstimate(carEstimate, carDataSeries.getLast(), lastMovingPixels, imageWidth);
+        return carEstimate;
+    }
+
+    public long getWaitEstimate(){
+        int regPosEstimate = CarDataUtils.getRegPosEstimate(lastCarEstimate, carDataSeries.getLast(), lastMovingPixels, imageWidth);
         int distToCapturePoint = capturePoint - regPosEstimate;
-        double framesTillCapture = distToCapturePoint / carEstimate.getPixelSpeed();
+        double framesTillCapture = distToCapturePoint / lastCarEstimate.getPixelSpeed();
         long avgFrameDelta = frameTimeManager.getAverageFrameDelta(numEstimateFrames);
 
         return (long)(framesTillCapture * avgFrameDelta) - captureLatency;
