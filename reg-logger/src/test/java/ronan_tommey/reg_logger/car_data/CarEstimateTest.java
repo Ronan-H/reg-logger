@@ -11,7 +11,7 @@ class CarEstimateTest {
 
     @Test
     void isGoingRight() throws IOException {
-        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/car-data-utils/frames-for-car-going-right");
+        BufferedImage[] frames = Utils.readFrameImagesFolder("./src/test/input/car-data-utils/frames-for-car-going-right");
 
         CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
 
@@ -20,7 +20,7 @@ class CarEstimateTest {
 
     @Test
     void isGoingLeft() throws IOException {
-        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/car-data-utils/frames-for-car-going-left");
+        BufferedImage[] frames = Utils.readFrameImagesFolder("./src/test/input/car-data-utils/frames-for-car-going-left");
 
         CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
 
@@ -29,7 +29,7 @@ class CarEstimateTest {
 
     @Test
     void pixelSpeed4FramesGoingRight() throws IOException {
-        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/frames-for-testing/four-frames-going-right");
+        BufferedImage[] frames = Utils.readFrameImagesFolder("./src/test/input/frames-for-testing/four-frames-going-right");
 
         //Values of car position (Car Going right)
         int firstX = 98;
@@ -46,7 +46,7 @@ class CarEstimateTest {
 
     @Test
     void pixelSpeed2FramesGoingRight() throws IOException {
-        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/frames-for-testing/two-frames-going-right");
+        BufferedImage[] frames = Utils.readFrameImagesFolder("./src/test/input/frames-for-testing/two-frames-going-right");
 
         //Values of car position (Car Going right)
         int firstX = 98;
@@ -63,7 +63,7 @@ class CarEstimateTest {
 
     @Test
     void pixelSpeed4FramesGoingLeft() throws IOException {
-        BufferedImage[] frames = Utils.readTestImageFolder("./src/test/input/frames-for-testing/four-frames-going-left");
+        BufferedImage[] frames = Utils.readFrameImagesFolder("./src/test/input/frames-for-testing/four-frames-going-left");
 
         //Variables
         int firstX = 106;
