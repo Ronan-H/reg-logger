@@ -13,7 +13,7 @@ class CarEstimateTest {
     void isGoingRight() throws IOException {
         BufferedImage[] frames = Utils.readFrameImagesFolder("./src/test/input/car-data-utils/frames-for-car-going-right");
 
-        CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
+        CarDataSeries car = Utils.getCarDataSeriesForImageFrames(frames);
 
         assertTrue(car.isGoingRight());
     }
@@ -22,7 +22,7 @@ class CarEstimateTest {
     void isGoingLeft() throws IOException {
         BufferedImage[] frames = Utils.readFrameImagesFolder("./src/test/input/car-data-utils/frames-for-car-going-left");
 
-        CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
+        CarDataSeries car = Utils.getCarDataSeriesForImageFrames(frames);
 
         assertFalse(car.isGoingRight());
     }
@@ -39,7 +39,7 @@ class CarEstimateTest {
 
         double speed = (double)distanceInFrames/(frames.length-1);
 
-        CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
+        CarEstimate car = Utils.getCarEstimateForImageFrames(frames, 4);
 
         assertEquals(speed, car.getPixelSpeed(),0.1);
     }
@@ -56,7 +56,7 @@ class CarEstimateTest {
 
         double speed = (double)distanceInFrames/(frames.length-1);
 
-        CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
+        CarEstimate car = Utils.getCarEstimateForImageFrames(frames, 2);
 
         assertEquals(speed, car.getPixelSpeed(),0.1);
     }
@@ -71,9 +71,9 @@ class CarEstimateTest {
 
         int distanceInFrames = secondX - firstX;
 
-        double speed = (double)distanceInFrames/(frames.length-1);
+        double speed = (double)distanceInFrames/(3);
 
-        CarEstimate car = Utils.getCarEstimateForImageFrames(frames);
+        CarEstimate car = Utils.getCarEstimateForImageFrames(frames, 4);
 
         assertEquals(speed, car.getPixelSpeed(), 0.1);
     }

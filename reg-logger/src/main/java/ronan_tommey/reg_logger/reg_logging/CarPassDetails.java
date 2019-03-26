@@ -1,13 +1,18 @@
 package ronan_tommey.reg_logger.reg_logging;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+
 public class CarPassDetails {
+    private BufferedImage capturedImage;
     private String regText;
     private long timestamp;
     private String direction;
     private double pixelSpeed;
     private double kmphSpeed;
 
-    public CarPassDetails(String regText, long timestamp, String direction, double pixelSpeed, double kmphSpeed) {
+    public CarPassDetails(BufferedImage capturedImage, String regText, long timestamp, String direction, double pixelSpeed, double kmphSpeed) {
+        this.capturedImage = capturedImage;
         this.regText = regText;
         this.timestamp = timestamp;
         this.direction = direction;
@@ -16,12 +21,21 @@ public class CarPassDetails {
     }
 
     public CarPassDetails(long timestamp, String direction, double pixelSpeed, double kmphSpeed) {
-        this(null, timestamp, direction, pixelSpeed, kmphSpeed);
+        this(null, null, timestamp, direction, pixelSpeed, kmphSpeed);
+    }
+
+    public void setCapturedImage(BufferedImage capturedImage) {
+        this.capturedImage = capturedImage;
     }
 
     public void setRegText(String regText) {
         this.regText = regText;
     }
+
+    public BufferedImage getCapturedImage() {
+        return capturedImage;
+    }
+
 
     public String getRegText() {
         return regText;

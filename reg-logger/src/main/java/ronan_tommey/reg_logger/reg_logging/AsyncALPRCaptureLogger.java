@@ -35,6 +35,8 @@ public class AsyncALPRCaptureLogger implements Runnable {
             }
 
             BufferedImage capturedImage = remoteCamera.captureImage(captureTime);
+            carPassDetails.setCapturedImage(capturedImage);
+
             String regText = ALPR.extractRegText(capturedImage);
             regText = RegHasher.hashReg(regText);
 

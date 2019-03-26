@@ -24,10 +24,14 @@ public class CarDataUtilsTest {
     @Test
     @Disabled
     public void generateCarEstimate() {
+        /*
+
         CarDataSeries seriesTest = new CarDataSeries();
         FrameTimeManager FTMTest = new FrameTimeManager(10);
         CarEstimate carTester = CarDataUtils.generateCarEstimate(seriesTest,FTMTest);
 
-        //assertEquals(,carTester);
+        assertEquals(,carTester);
+
+        */
     }
 }

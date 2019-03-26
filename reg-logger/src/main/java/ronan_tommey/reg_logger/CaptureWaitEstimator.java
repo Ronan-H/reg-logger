@@ -3,6 +3,12 @@ package ronan_tommey.reg_logger;
 import ronan_tommey.reg_logger.car_data.*;
 
 public class CaptureWaitEstimator {
+    // minimum distance the car has to be from where it started
+    // before an estimate can be generated, when coming from the left
+    // (the car must have fully emerged from the edge of the frame before
+    // the length of the car can be found)
+    private static final int minDistBeforeInFrame = 20;
+
     private int numEstimateFrames;
     private int capturePoint;
     private int imageWidth;
@@ -18,10 +24,14 @@ public class CaptureWaitEstimator {
         this.capturePoint = capturePoint;
         this.imageWidth = imageWidth;
         this.captureLatency = captureLatency;
-        carDataSeries = new CarDataSeries();
+        carDataSeries = new CarDataSeries(imageWidth);
         // TODO: don't hard code buffer size
         frameTimeManager = new FrameTimeManager(350);
         allowCapture = true;
+    }
+
+    public boolean isGoingRight() {
+        return carDataSeries.isGoingRight();
     }
 
     public void addNextFrameData(CarData carData, boolean[] movingPixels, long delta) {
@@ -30,7 +40,7 @@ public class CaptureWaitEstimator {
         if(carData == null) {
             allowCapture = true;
             if(carDataSeries.size() > 0) {
-                carDataSeries = new CarDataSeries();
+                carDataSeries = new CarDataSeries(imageWidth);
             }
         }
         else {
@@ -45,12 +55,15 @@ public class CaptureWaitEstimator {
     }
 
     public boolean estimateReady(){
-        return carDataSeries.size() >= numEstimateFrames && allowCapture;
+        return carDataSeries.size() >= numEstimateFrames
+                && allowCapture
+                && (!carDataSeries.isGoingRight() ||
+                carDataSeries.getLast().getLeftX() - carDataSeries.getFirst().getLeftX() > minDistBeforeInFrame);
     }
 
     public CarEstimate generateCarEstimate(){
-        CarEstimate carEstimate = CarDataUtils.generateCarEstimate(carDataSeries, frameTimeManager);
-        return carEstimate;
+        lastCarEstimate = CarDataUtils.generateCarEstimate(carDataSeries, numEstimateFrames, frameTimeManager);
+        return lastCarEstimate;
     }
 
     public long getWaitEstimate(){

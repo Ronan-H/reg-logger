@@ -69,9 +69,9 @@ public class Utils {
         return images;
     }
 
-    public static CarEstimate getCarEstimateForImageFrames(BufferedImage[] frames)
+    public static CarDataSeries getCarDataSeriesForImageFrames(BufferedImage[] frames)
     {
-        CarDataSeries tester = new CarDataSeries();
+        CarDataSeries tester = new CarDataSeries(frames[0].getWidth());
 
         for(int i=0; i < frames.length; i++)
         {
@@ -80,8 +80,15 @@ public class Utils {
             tester.addNextCarData(data);
         }
 
+        return tester;
+    }
+
+    public static CarEstimate getCarEstimateForImageFrames(BufferedImage[] frames, int numEstimateFrames)
+    {
+        CarDataSeries tester = getCarDataSeriesForImageFrames(frames);
+
         FrameTimeManager timeTest = new FrameTimeManager(10);
-        CarEstimate car = CarDataUtils.generateCarEstimate(tester, timeTest);
+        CarEstimate car = CarDataUtils.generateCarEstimate(tester, numEstimateFrames, timeTest);
 
         return car;
     }

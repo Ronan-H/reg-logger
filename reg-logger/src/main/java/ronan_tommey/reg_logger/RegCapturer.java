@@ -31,7 +31,7 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
     private long nextFrameDelta;
 
     private long frameCounter = 0;
-    private CaptureWaitEstimator estimator;
+    private CaptureWaitEstimator waitEstimator;
     private RemoteCamera remoteCamera;
     private CarPassLogger carPassLogger;
     private AsyncALPRCaptureLogger captureLogger;
@@ -40,7 +40,7 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
     public RegCapturer(int capWidth, int capHeight) {
         piCamFrameStreamer = new PiCamFrameStreamer(capWidth, capHeight, this);
         movementHighlighter = new MovementHighlighter(capWidth, capHeight);
-        estimator = new CaptureWaitEstimator(4, 304, capWidth, TOTAL_CAPTURE_LATENCY);
+        waitEstimator = new CaptureWaitEstimator(4, 304, capWidth, TOTAL_CAPTURE_LATENCY);
         remoteCamera = new RemoteCamera(REMOTE_CAMERA_PORT);
         carPassLogger = new CarPassDatabase();
         captureLogger = new AsyncALPRCaptureLogger(remoteCamera, carPassLogger);
@@ -87,24 +87,24 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
 
         CarData data = CarDataUtils.generateCarData(movingPixels, frame.getWidth());
 
-        estimator.addNextFrameData(data, movingPixels, delta);
+        waitEstimator.addNextFrameData(data, movingPixels, delta);
 
-        if(estimator.estimateReady())
+        if(waitEstimator.estimateReady())
         {
-            CarEstimate carEstimate = estimator.generateCarEstimate();
-            long waitEstimate = estimator.getWaitEstimate();
+            CarEstimate carEstimate = waitEstimator.generateCarEstimate();
+            long waitEstimate = waitEstimator.getWaitEstimate();
             if(waitEstimate > minEstimateBeforeCapture && waitEstimate < maxEstimateBeforeCapture)
             {
                 CarPassDetails carPassDetails = new CarPassDetails(
                         Calendar.getInstance().getTimeInMillis(),
-                        carEstimate.isGoingRight() ? "Right" : "Left",
+                        waitEstimator.isGoingRight() ? "Right" : "Left",
                         carEstimate.getPixelSpeed(),
                         carEstimate.getKmphSpeed()
                 );
 
                 captureLogger.capturePass(carPassDetails, waitEstimate);
 
-                estimator.onCapture();
+                waitEstimator.onCapture();
             }
         }
 

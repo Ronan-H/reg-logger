@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CarDataSeries {
+    private int imageWidth;
     private List<CarData> carDataList;
 
-    public CarDataSeries() {
-        carDataList = new ArrayList<CarData>();
+    public CarDataSeries(int imageWidth) {
+        this.imageWidth = imageWidth;
+        carDataList = new ArrayList<>();
     }
 
     public void addNextCarData(CarData carData){
@@ -20,6 +22,14 @@ public class CarDataSeries {
 
     public CarData getLast() {
         return carDataList.get(carDataList.size() - 1);
+    }
+
+    public CarData getNthFromEnd(int n) {
+        return carDataList.get(carDataList.size() - n - 1);
+    }
+
+    public boolean isGoingRight() {
+        return getFirst().getLeftX() < (imageWidth / 2);
     }
 
     public int size() {

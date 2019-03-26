@@ -54,39 +54,26 @@ public class CarDataUtils {
         return new CarData(leftX, rightX, topY, bottomY);
     }
 
-    public static CarEstimate generateCarEstimate(CarDataSeries carDataSeries, FrameTimeManager frameTimeManager){
+    public static CarEstimate generateCarEstimate(CarDataSeries carDataSeries, int estimateFrames, FrameTimeManager frameTimeManager) {
         double distance;
-        CarData first = carDataSeries.getFirst();
+        // CarData objects to base the speed estimate on
+        CarData first = carDataSeries.getNthFromEnd(estimateFrames - 1);
         CarData last = carDataSeries.getLast();
-        // calculate distances from both side of the car across all frames
-        double rightEndDistance = last.getRightX() - first.getRightX();
-        double leftEndDistance = last.getLeftX() - first.getLeftX();
 
-        // figure out car's direction based on speed (positive/negative)
-        // use whichever value is bigger, so if the car is emerging from the side of the screen,
-        // the appropriate value will be used
-        if (Math.abs(rightEndDistance) > Math.abs(leftEndDistance)) {
-            distance = rightEndDistance;
+        // use the front of the car when calculating the distance
+        if (carDataSeries.isGoingRight()) {
+            distance = last.getRightX() - first.getRightX();
         }
         else {
-            distance = leftEndDistance;
+            distance = last.getLeftX() - first.getLeftX();
         }
 
-        // positive distance indicates that the car is going right
-        // (otherwise, it is going left)
-        boolean goingRight = (distance > 0);
-
-        // ensure the distance from the front of the car is being used instead of the back
-        distance = (goingRight ? rightEndDistance : leftEndDistance);
-
         // calculate the speed of the car, in pixels per frame
-        double pixelSpeed = distance / (carDataSeries.size() - 1);
+        double pixelSpeed = distance / (estimateFrames  - 1);
 
         // TODO: calculate kmph speed
 
-        CarEstimate carEstimate = new CarEstimate(goingRight, pixelSpeed, 0);
-
-        return carEstimate;
+        return new CarEstimate(pixelSpeed, 0);
     }
 
     public static int getRegPosEstimate(CarEstimate carEstimate, CarData carData, boolean[] movingPixels, int imageWidth) {
