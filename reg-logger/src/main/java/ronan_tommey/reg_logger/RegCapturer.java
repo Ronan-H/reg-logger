@@ -5,10 +5,7 @@ import ronan_tommey.reg_logger.image_processing.FrameUtils;
 import ronan_tommey.reg_logger.image_processing.MovementHighlighter;
 import ronan_tommey.reg_logger.image_processing.PiCamFrameListener;
 import ronan_tommey.reg_logger.image_processing.PiCamFrameStreamer;
-import ronan_tommey.reg_logger.reg_logging.AsyncALPRCaptureLogger;
-import ronan_tommey.reg_logger.reg_logging.CarPassDatabase;
-import ronan_tommey.reg_logger.reg_logging.CarPassDetails;
-import ronan_tommey.reg_logger.reg_logging.CarPassLogger;
+import ronan_tommey.reg_logger.reg_logging.*;
 
 import java.awt.image.BufferedImage;
 import java.util.Calendar;
@@ -42,7 +39,7 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
         movementHighlighter = new MovementHighlighter(capWidth, capHeight);
         waitEstimator = new CaptureWaitEstimator(4, 304, capWidth, TOTAL_CAPTURE_LATENCY);
         remoteCamera = new RemoteCamera(REMOTE_CAMERA_PORT);
-        carPassLogger = new CarPassDatabase();
+        carPassLogger = new CarPassFileSystem("./car-pass-log");
         captureLogger = new AsyncALPRCaptureLogger(remoteCamera, carPassLogger);
         new Thread(captureLogger).start();
     }
