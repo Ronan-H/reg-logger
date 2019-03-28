@@ -53,5 +53,7 @@ public class AsyncALPRCaptureLogger implements Runnable {
         this.captureTime = captureTime;
 
         readyToCapture = true;
+
+        notifyAll();
     }
 }

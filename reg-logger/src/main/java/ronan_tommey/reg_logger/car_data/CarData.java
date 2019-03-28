@@ -6,16 +6,22 @@ public class CarData {
     // positions of the topmost and bottommost moving pixels in the image
     private int topY;
     private int bottomY;
+    private int regPosEstimate;
     // width of the car
     private int width;
 
-    public CarData(int leftX, int rightX, int topY, int bottomY) {
+    public CarData(int leftX, int rightX, int topY, int bottomY, int regPosEstimate) {
         this.leftX = leftX;
         this.rightX = rightX;
         this.topY = topY;
         this.bottomY = bottomY;
+        this.regPosEstimate = regPosEstimate;
 
         width = rightX - leftX;
+    }
+
+    public CarData(int leftX, int rightX, int topY, int bottomY) {
+        this(leftX, rightX, topY, bottomY, -1);
     }
 
     public int getLeftX() {
@@ -32,6 +38,14 @@ public class CarData {
 
     public int getBottomY() {
         return bottomY;
+    }
+
+    public void setRegPosEstimate(int regPosEstimate) {
+        this.regPosEstimate = regPosEstimate;
+    }
+
+    public int getRegPosEstimate() {
+        return regPosEstimate;
     }
 
     public int getWidth() {

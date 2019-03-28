@@ -24,8 +24,8 @@ public class MovementHighlighter{
 
         visualized = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
 
-        float threshold = 20; // lower = more sensitive
-        float learnRate = 0.0035f; // 0 = static, 1 = instant
+        float threshold = 23; // lower = more sensitive
+        float learnRate = 0.005f; // 0 = static, 1 = instant
 
         background = FactoryBackgroundModel.stationaryBasic(
                 new ConfigBackgroundBasic(threshold, learnRate), imageType

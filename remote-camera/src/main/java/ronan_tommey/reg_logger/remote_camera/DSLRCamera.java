@@ -1,4 +1,4 @@
-package ronan_tommey.reg_logger;
+package ronan_tommey.reg_logger.remote_camera;
 
 import org.gphoto2.*;
 

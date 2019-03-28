@@ -9,7 +9,7 @@ public class PiCamFrameStreamer implements Runnable{
     public static final long NS_BETWEEN_FRAMES = 1000000000 / FPS;
 
     private static final int blockSize = 4096;
-    private static final int numBlocks = 16;
+    private static final int numBlocks = 64;
 
     private InputStream inputStream;
     private boolean running;

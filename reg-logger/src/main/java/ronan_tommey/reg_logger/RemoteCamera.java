@@ -31,7 +31,7 @@ public class RemoteCamera {
     public BufferedImage captureImage(long captureTime) {
         BufferedImage capturedImage = null;
 
-        long sleepTime = captureTime - System.nanoTime();
+        long sleepTime = captureTime;
 
         out.println(sleepTime);
         out.flush();
