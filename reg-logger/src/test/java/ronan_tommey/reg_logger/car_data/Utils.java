@@ -88,7 +88,7 @@ public class Utils {
         CarDataSeries tester = getCarDataSeriesForImageFrames(frames);
 
         FrameTimeManager timeTest = new FrameTimeManager(10);
-        CarEstimate car = CarDataUtils.generateCarEstimate(tester, numEstimateFrames, timeTest);
+        CarEstimate car = CarDataUtils.generateCarEstimate(tester, numEstimateFrames, timeTest, false);
 
         return car;
     }

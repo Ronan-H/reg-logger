@@ -54,18 +54,23 @@ public class CarDataUtils {
         return new CarData(leftX, rightX, topY, bottomY);
     }
 
-    public static CarEstimate generateCarEstimate(CarDataSeries carDataSeries, int estimateFrames, FrameTimeManager frameTimeManager) {
+    public static CarEstimate generateCarEstimate(CarDataSeries carDataSeries, int estimateFrames, FrameTimeManager frameTimeManager, boolean useHeuristic) {
         double distance;
         // CarData objects to base the speed estimate on
         CarData first = carDataSeries.getNthFromEnd(estimateFrames - 1);
         CarData last = carDataSeries.getLast();
 
-        // use the front of the car when calculating the distance
-        if (carDataSeries.isGoingRight()) {
-            distance = last.getRightX() - first.getRightX();
+        if (useHeuristic) {
+            distance = last.getRegPosEstimate() - first.getRegPosEstimate();
         }
         else {
-            distance = last.getLeftX() - first.getLeftX();
+            // use the front of the car when calculating the distance
+            if (carDataSeries.isGoingRight()) {
+                distance = last.getRightX() - first.getRightX();
+            }
+            else {
+                distance = last.getLeftX() - first.getLeftX();
+            }
         }
 
         // calculate the speed of the car, in pixels per frame
@@ -76,7 +81,7 @@ public class CarDataUtils {
         return new CarEstimate(pixelSpeed, 0);
     }
 
-    public static int getRegPosEstimate(CarEstimate carEstimate, CarData carData, boolean[] movingPixels, int imageWidth) {
+    public static void addRegPosEstimate(CarData carData, boolean[] movingPixels, int imageWidth) {
         final double shadowCuttoffRatio = 0.4;
 
         int carHeight = carData.getBottomY() - carData.getTopY();
@@ -89,13 +94,11 @@ public class CarDataUtils {
                     colHeight = carHeight - (scanY - carData.getTopY());
 
                     if ((double) colHeight / carHeight > shadowCuttoffRatio) {
-                        return scanX;
+                        carData.setRegPosEstimate(scanX);
+                        return;
                     }
                 }
             }
         }
-
-        System.err.println("Error while estimating car reg pos: var was never set");
-        return -1;
     }
 }

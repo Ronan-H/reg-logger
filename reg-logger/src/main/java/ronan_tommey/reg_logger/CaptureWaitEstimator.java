@@ -34,6 +34,10 @@ public class CaptureWaitEstimator {
         return carDataSeries.isGoingRight();
     }
 
+    public boolean isCaptureAllowed() {
+        return allowCapture;
+    }
+
     public void addNextFrameData(CarData carData, boolean[] movingPixels, long delta) {
         frameTimeManager.addFrameDelta(delta);
 
@@ -44,6 +48,9 @@ public class CaptureWaitEstimator {
             }
         }
         else {
+            // add generated reg pos estimate field to carData
+            CarDataUtils.addRegPosEstimate(carData, movingPixels, imageWidth);
+
             carDataSeries.addNextCarData(carData);
         }
 
@@ -62,12 +69,12 @@ public class CaptureWaitEstimator {
     }
 
     public CarEstimate generateCarEstimate(){
-        lastCarEstimate = CarDataUtils.generateCarEstimate(carDataSeries, numEstimateFrames, frameTimeManager);
+        lastCarEstimate = CarDataUtils.generateCarEstimate(carDataSeries, numEstimateFrames, frameTimeManager, true);
         return lastCarEstimate;
     }
 
     public long getWaitEstimate(){
-        int regPosEstimate = CarDataUtils.getRegPosEstimate(lastCarEstimate, carDataSeries.getLast(), lastMovingPixels, imageWidth);
+        int regPosEstimate = carDataSeries.getLast().getRegPosEstimate();
         int distToCapturePoint = capturePoint - regPosEstimate;
         double framesTillCapture = distToCapturePoint / lastCarEstimate.getPixelSpeed();
         long avgFrameDelta = frameTimeManager.getAverageFrameDelta(numEstimateFrames);
