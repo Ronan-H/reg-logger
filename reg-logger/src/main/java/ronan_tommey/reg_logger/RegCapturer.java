@@ -16,11 +16,11 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
     private static final long maxEstimateBeforeCapture = 200 * 1000000;
     private static final int numIgnoreFirst = 25 * 5;
 
-    private static final int DSLR_CAPTURE_LATENCY = 530 * 1000000;
+    private static final int DSLR_CAPTURE_LATENCY = 400 * 1000000;
     private static final int LAN_LATENCY = 10 * 1000000;
     private static final int TOTAL_CAPTURE_LATENCY = DSLR_CAPTURE_LATENCY + LAN_LATENCY;
 
-    private static final int CAPTURE_POINT = 303;
+    private static final int CAPTURE_POINT = 321;
 
     public static final int REMOTE_CAMERA_PORT = 52197;
 
@@ -88,7 +88,7 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
         int movingPixelCount = FrameUtils.countMoving(movingPixels);
 
         if (movingPixelCount > 0) {
-            //writeDebugFrames(frame, movementImage, movingPixels);
+            writeDebugFrames(frame, movementImage, movingPixels);
         }
 
         CarData data = CarDataUtils.generateCarData(movingPixels, frame.getWidth());
@@ -96,16 +96,12 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
         waitEstimator.addNextFrameData(data, movingPixels, delta);
 
         if (data != null) {
-            if (waitEstimator.isCaptureAllowed()) {
-                System.out.println("Reg pos x: " + data.getRegPosEstimate());
-            }
-
             if(waitEstimator.estimateReady()) {
                 CarEstimate carEstimate = waitEstimator.generateCarEstimate();
                 long waitEstimate = waitEstimator.getWaitEstimate();
-                System.out.println("\tWait estimate: " + waitEstimate);
                 if(waitEstimate > minEstimateBeforeCapture && waitEstimate < maxEstimateBeforeCapture)
                 {
+                    System.out.println("\tWait estimate: " + waitEstimate);
                     System.out.println("\tLocking in estimate...\n");
 
                     CarPassDetails carPassDetails = new CarPassDetails(
@@ -125,12 +121,12 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
 
     private void writeDebugFrames(BufferedImage frame, BufferedImage movementImage, boolean[] movingPixels) {
         try {
-            int movingPixelCount = FrameUtils.countMoving(movingPixels);
+            //int movingPixelCount = FrameUtils.countMoving(movingPixels);
 
-            System.out.println("Moving pixel count: " + movingPixelCount);
+            //System.out.println("Moving pixel count: " + movingPixelCount);
 
             FrameUtils.saveImage(frame, String.format("./test-images/scaled/scaled_%d.png", frameCounter));
-            FrameUtils.saveImage(movementImage, String.format("./test-images/movement/movement_%d.png", frameCounter));
+            //FrameUtils.saveImage(movementImage, String.format("./test-images/movement/movement_%d.png", frameCounter));
             FrameUtils.saveBoolArrayAsImage(movingPixels, frame.getWidth(), String.format("./test-images/noise-removed/noise-rem_%d.png", frameCounter));
         } catch (IOException e) {
             e.printStackTrace();

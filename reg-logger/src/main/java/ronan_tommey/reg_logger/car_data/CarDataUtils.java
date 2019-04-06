@@ -13,8 +13,7 @@ public class CarDataUtils {
      * @return The generated CarData object
      */
     public static CarData generateCarData(boolean[] movingPixels, int imageWidth){
-        if(FrameUtils.countMoving(movingPixels) == 0)
-        {
+        if(FrameUtils.countMoving(movingPixels) == 0) {
             return null;
         }
 
@@ -51,20 +50,34 @@ public class CarDataUtils {
             }
         }
 
+        // construct CarData object from values
         return new CarData(leftX, rightX, topY, bottomY);
     }
 
+    /**
+     * Generates a CarEstimate object based on a series of CarData objects (CarDataSeries),
+     * and the time delta values between them (FrameTimeManager).
+     * @param carDataSeries The series of CarData objects to base the estimate on
+     * @param estimateFrames The number of frames to use for the estimate (eg. 4 meaning the last 4 frames only)
+     * @param frameTimeManager The FrameTimeManager class that stored the frame time delta values for theassociated carDataSeries
+     * @param useHeuristic If set to true, uses a heuristic algorithm to determine the location of the left side of the car,
+     *                     accounting for shadows. If set to false, uses the car's leftmost/rightmost pixel.
+     * @return The generated CarEstimate object
+     */
     public static CarEstimate generateCarEstimate(CarDataSeries carDataSeries, int estimateFrames, FrameTimeManager frameTimeManager, boolean useHeuristic) {
-        double distance;
         // CarData objects to base the speed estimate on
         CarData first = carDataSeries.getNthFromEnd(estimateFrames - 1);
         CarData last = carDataSeries.getLast();
 
+        double distance;
+
+        // calculate the distance the car travelled
         if (useHeuristic) {
+            // use the heuristic shadow removing algorithm to calculate the cars distance
             distance = last.getRegPosEstimate() - first.getRegPosEstimate();
         }
         else {
-            // use the front of the car when calculating the distance
+            // use the very front of the car when calculating the distance
             if (carDataSeries.isGoingRight()) {
                 distance = last.getRightX() - first.getRightX();
             }
@@ -81,6 +94,13 @@ public class CarDataUtils {
         return new CarEstimate(pixelSpeed, 0);
     }
 
+    /**
+     * Updates a CarData object to include an estimate of where the registration plate is
+     * (by removing any trailing shadow)
+     * @param carData The CarData object to update
+     * @param movingPixels The array indicating movement for the frame at a given index
+     * @param imageWidth The width of the frame
+     */
     public static void addRegPosEstimate(CarData carData, boolean[] movingPixels, int imageWidth) {
         final double shadowCuttoffRatio = 0.4;
 

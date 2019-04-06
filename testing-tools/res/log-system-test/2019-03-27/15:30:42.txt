@@ -1,5 +1,0 @@
-Registration: 09-G-12345
-Timestamp: 2019-03-27 15:30:42
-Direction: Right
-Pixel speed: 8.2
-KMPH speed: 42.00kmph

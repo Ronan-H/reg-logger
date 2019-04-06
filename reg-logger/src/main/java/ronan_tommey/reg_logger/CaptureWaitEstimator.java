@@ -30,20 +30,44 @@ public class CaptureWaitEstimator {
         allowCapture = true;
     }
 
+    /**
+     * Delegate method; returns true if the currently passing car is going right,
+     * false otherwise.
+     *
+     * @return True if the currently passing car is going right, false otherwise
+     */
     public boolean isGoingRight() {
         return carDataSeries.isGoingRight();
     }
 
+    /**
+     * Indicates whether or not a picture can currently be taken. This is to prevent
+     * multiple pictures being captured of the same car in one pass.
+     *
+     * @return True if capture is allowed
+     */
     public boolean isCaptureAllowed() {
         return allowCapture;
     }
 
+    /**
+     * Updates this object with data from the next frame of streamed video.
+     *
+     * @param carData Calculated CarData object of this frame
+     * @param movingPixels Boolean array representing which pixels of the frame are detected as moving
+     * @param delta Amount of time that has passed since the last frame read in, in nanoseconds
+     */
     public void addNextFrameData(CarData carData, boolean[] movingPixels, long delta) {
         frameTimeManager.addFrameDelta(delta);
 
+        // null CarData represents no car being detected in the frame
         if(carData == null) {
+            // ensure capture is allowed for the next car that passes
+            // (capture is allowed again once a passing car leaves the frame)
             allowCapture = true;
+
             if(carDataSeries.size() > 0) {
+                // reset CarDataSeries object; should only contain frame data of one pass
                 carDataSeries = new CarDataSeries(imageWidth);
             }
         }
@@ -54,6 +78,8 @@ public class CaptureWaitEstimator {
             carDataSeries.addNextCarData(carData);
         }
 
+        // store only the current frame's movingPixels array, for use in estimating the car's
+        // distance to the capture point (uses a heuristic algorithm)
         this.lastMovingPixels = movingPixels;
     }
 
