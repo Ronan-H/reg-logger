@@ -42,7 +42,7 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
         movementHighlighter = new MovementHighlighter(capWidth, capHeight);
         waitEstimator = new CaptureWaitEstimator(4, CAPTURE_POINT, capWidth, TOTAL_CAPTURE_LATENCY);
         remoteCamera = new RemoteCamera(REMOTE_CAMERA_PORT);
-        carPassLogger = new CarPassFileSystem("./car-pass-log");
+        carPassLogger = new CarPassDatabase();
         captureLogger = new AsyncALPRCaptureLogger(remoteCamera, carPassLogger);
         new Thread(captureLogger).start();
     }
