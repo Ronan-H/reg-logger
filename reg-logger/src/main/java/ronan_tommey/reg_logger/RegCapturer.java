@@ -12,15 +12,21 @@ import java.io.IOException;
 import java.util.Calendar;
 
 public class RegCapturer implements PiCamFrameListener, Runnable {
+    private static final int CAP_WIDTH = 300;
+    private static final int CAP_HEIGHT = 64;
+
+    public static final int FPS = 25;
+    public static final long NS_BETWEEN_FRAMES = 1000000000 / FPS;
+
     private static final long minEstimateBeforeCapture = -200 * 1000000;
-    private static final long maxEstimateBeforeCapture = 200 * 1000000;
-    private static final int numIgnoreFirst = 25 * 5;
+    private static final long maxEstimateBeforeCapture = 100 * 1000000;
+    private static final int numIgnoreFirst = 3 * FPS;
 
-    private static final int DSLR_CAPTURE_LATENCY = 400 * 1000000;
+    private static final int DSLR_CAPTURE_LATENCY = 270 * 1000000;
     private static final int LAN_LATENCY = 10 * 1000000;
-    private static final int TOTAL_CAPTURE_LATENCY = DSLR_CAPTURE_LATENCY + LAN_LATENCY;
+    public static final int TOTAL_CAPTURE_LATENCY = DSLR_CAPTURE_LATENCY + LAN_LATENCY;
 
-    private static final int CAPTURE_POINT = 321;
+    public static final int CAPTURE_POINT = 250;
 
     public static final int REMOTE_CAMERA_PORT = 52197;
 
@@ -37,10 +43,10 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
     private AsyncALPRCaptureLogger captureLogger;
     private boolean running;
 
-    public RegCapturer(int capWidth, int capHeight) {
-        piCamFrameStreamer = new PiCamFrameStreamer(capWidth, capHeight, this);
-        movementHighlighter = new MovementHighlighter(capWidth, capHeight);
-        waitEstimator = new CaptureWaitEstimator(4, CAPTURE_POINT, capWidth, TOTAL_CAPTURE_LATENCY);
+    public RegCapturer() {
+        piCamFrameStreamer = new PiCamFrameStreamer(CAP_WIDTH, CAP_HEIGHT, FPS, this);
+        movementHighlighter = new MovementHighlighter(CAP_WIDTH, CAP_HEIGHT);
+        waitEstimator = new CaptureWaitEstimator(4, CAPTURE_POINT, CAP_WIDTH, TOTAL_CAPTURE_LATENCY);
         remoteCamera = new RemoteCamera(REMOTE_CAMERA_PORT);
         carPassLogger = new CarPassFileSystem("./car-pass-log");
         captureLogger = new AsyncALPRCaptureLogger(remoteCamera, carPassLogger);
@@ -83,7 +89,7 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
         // one dimension, with increasing indexes going left to right first, then
         // down, on the passed in image (ie. x = i % width, y = i / width)
         boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(movementImage);
-        FrameUtils.removeNoise(movingPixels, frame.getWidth(), 150);
+        FrameUtils.removeNoise(movingPixels, frame.getWidth(), 100);
 
         int movingPixelCount = FrameUtils.countMoving(movingPixels);
 
@@ -120,19 +126,26 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
     }
 
     private void writeDebugFrames(BufferedImage frame, BufferedImage movementImage, boolean[] movingPixels) {
-        try {
-            //int movingPixelCount = FrameUtils.countMoving(movingPixels);
+        new Thread(() -> {
+            try {
+                //int movingPixelCount = FrameUtils.countMoving(movingPixels);
 
-            //System.out.println("Moving pixel count: " + movingPixelCount);
+                //System.out.println("Moving pixel count: " + movingPixelCount);
 
-            FrameUtils.saveImage(frame, String.format("./test-images/scaled/scaled_%d.png", frameCounter));
-            //FrameUtils.saveImage(movementImage, String.format("./test-images/movement/movement_%d.png", frameCounter));
-            FrameUtils.saveBoolArrayAsImage(movingPixels, frame.getWidth(), String.format("./test-images/noise-removed/noise-rem_%d.png", frameCounter));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                FrameUtils.saveImage(frame, String.format("./test-images/scaled/scaled_%d.png", frameCounter));
+                //FrameUtils.saveImage(movementImage, String.format("./test-images/movement/movement_%d.png", frameCounter));
+                FrameUtils.saveBoolArrayAsImage(movingPixels, frame.getWidth(), String.format("./test-images/noise-removed/noise-rem_%d.png", frameCounter));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
     public synchronized void onFrameRead(BufferedImage image, long delta) {
+        if (nextFrame != null) {
+            System.out.printf("Frame %d: New frame read before previous frame was processed!%n", frameCounter);
+            return;
+        }
+
         nextFrame = image;
         nextFrameDelta = delta;
 

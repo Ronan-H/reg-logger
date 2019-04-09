@@ -5,9 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 
 public class PiCamFrameStreamer implements Runnable{
-    public static final int FPS = 35;
-    public static final long NS_BETWEEN_FRAMES = 1000000000 / FPS;
-
     private static final int blockSize = 4096;
     private static final int numBlocks = 64;
 
@@ -15,11 +12,11 @@ public class PiCamFrameStreamer implements Runnable{
     private boolean running;
     private PiCamFrameListener camListener;
 
-    public PiCamFrameStreamer(int frameWidth, int frameHeight, PiCamFrameListener camListener) {
+    public PiCamFrameStreamer(int frameWidth, int frameHeight, int fps, PiCamFrameListener camListener) {
         this.camListener = camListener;
 
         String[] command = { "/bin/sh", "-c",
-                String.format("raspivid -o - -t 0 -cd MJPEG -w %d -h %d -fps %d -hf -vf", frameWidth, frameHeight, FPS) };
+                String.format("raspivid -o - -t 0 -cd MJPEG -md 5 -w %d -h %d -fps %d -hf -vf", frameWidth, frameHeight, fps) };
         Runtime rt = Runtime.getRuntime();
         Process proc;
         try {
@@ -59,9 +56,7 @@ public class PiCamFrameStreamer implements Runnable{
 
         // initial first block read
 
-        if (imageTime == 0) {
-            imageTime = System.nanoTime();
-        }
+        imageTime = System.nanoTime();
 
         while (running) {
             block = blocks[currBlock];

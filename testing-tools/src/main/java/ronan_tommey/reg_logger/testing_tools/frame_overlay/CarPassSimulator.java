@@ -1,6 +1,8 @@
 package ronan_tommey.reg_logger.testing_tools.frame_overlay;
 
 import ronan_tommey.reg_logger.CaptureWaitEstimator;
+import ronan_tommey.reg_logger.RegCapturer;
+import ronan_tommey.reg_logger.RegLogger;
 import ronan_tommey.reg_logger.car_data.*;
 import ronan_tommey.reg_logger.image_processing.FrameUtils;
 
@@ -22,7 +24,11 @@ public class CarPassSimulator {
 
             CarDataSeries carDataSeries = new CarDataSeries(inputFrames[0].getWidth());
             FrameTimeManager frameTimeManager = new FrameTimeManager(inputFrames.length);
-            CaptureWaitEstimator waitEstimator = new CaptureWaitEstimator(4, 270, inputFrames[0].getWidth(), 610);
+            CaptureWaitEstimator waitEstimator = new CaptureWaitEstimator(
+                    4,
+                    RegCapturer.CAPTURE_POINT,
+                    inputFrames[0].getWidth(),
+                    RegCapturer.TOTAL_CAPTURE_LATENCY);
 
             for (int i = 0; i < inputFrames.length; i++) {
                 System.out.printf("Frame %d%n", i);

@@ -1,12 +1,13 @@
 package ronan_tommey.reg_logger.car_data;
 
+import ronan_tommey.reg_logger.RegCapturer;
 import ronan_tommey.reg_logger.image_processing.PiCamFrameStreamer;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class FrameTimeManager {
-    public static final long EXPECTED_FRAME_TIME = PiCamFrameStreamer.NS_BETWEEN_FRAMES;
+    public static final long EXPECTED_FRAME_TIME = RegCapturer.NS_BETWEEN_FRAMES;
 
     private List<Long> delays;
     private int bufferSize;

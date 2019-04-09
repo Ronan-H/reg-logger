@@ -7,7 +7,7 @@ public class CaptureWaitEstimator {
     // before an estimate can be generated, when coming from the left
     // (the car must have fully emerged from the edge of the frame before
     // the length of the car can be found)
-    private static final int minDistBeforeInFrame = 20;
+    private static final int minDistBeforeInFrame = 15;
 
     private int numEstimateFrames;
     private int capturePoint;

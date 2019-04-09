@@ -23,6 +23,7 @@ public class FrameOverlayGenerator {
             for (int i = 0; i < inputFrames.length; i++) {
                 boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(inputFrames[i]);
                 CarData carData = CarDataUtils.generateCarData(movingPixels, inputFrames[i].getWidth());
+                CarDataUtils.addRegPosEstimate(carData, movingPixels, inputFrames[i].getWidth());
                 FrameOverlay frameOverlay = new FrameOverlay(carData, inputFrames[i]);
                 frameOverlay.drawOverlay();
                 frameOverlay.saveToFile(outputDir, i);

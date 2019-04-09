@@ -36,6 +36,10 @@ public class FrameOverlay {
         g.setColor(getTranparentColor(Color.MAGENTA));
         g.drawLine(0, carData.getBottomY(), image.getWidth(), carData.getBottomY());
 
+        // draw yellow line for reg pos estimate
+        g.setColor(getTranparentColor(Color.YELLOW));
+        g.drawLine(carData.getRegPosEstimate(), 0, carData.getRegPosEstimate(), image.getHeight());
+
         g.dispose();
     }
 
