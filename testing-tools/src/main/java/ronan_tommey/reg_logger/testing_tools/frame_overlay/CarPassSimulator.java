@@ -28,7 +28,8 @@ public class CarPassSimulator {
                     4,
                     RegCapturer.CAPTURE_POINT,
                     inputFrames[0].getWidth(),
-                    RegCapturer.TOTAL_CAPTURE_LATENCY);
+                    RegCapturer.TOTAL_CAPTURE_LATENCY,
+                    null);
 
             for (int i = 0; i < inputFrames.length; i++) {
                 System.out.printf("Frame %d%n", i);
@@ -65,7 +66,7 @@ public class CarPassSimulator {
     public static void main(String[] args) {
         System.out.println("Simulating car pass...\n");
 
-        String usingDir = "./res/car-data-testing/sample-frames-1/";
+        String usingDir = "./res/car-data-testing/50km-pass-demo/";
         String inputDir = usingDir + "input/";
         String outputDir = usingDir + "output/";
         CarPassSimulator carPassSimulator = new CarPassSimulator(inputDir, outputDir);

@@ -12,12 +12,14 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 
 public class DSLRCamera {
-    private long captureTime;
     private Camera camera;
 
-    public DSLRCamera(long captureTime, Camera camera) {
-        this.captureTime = captureTime;
-        this.camera = camera;
+    public DSLRCamera() {
+        final CameraList cl = new CameraList();
+        System.out.println("Cameras: " + cl);
+        CameraUtils.closeQuietly(cl);
+        camera = new Camera();
+        camera.initialize();
     }
 
     public BufferedImage captureImage(long captureTime) throws IOException {
@@ -49,9 +51,7 @@ public class DSLRCamera {
         System.out.println("Image captured and saved as " + path);
         System.out.println("Reading saved image...");
 
-        BufferedImage capturedImage = null;
-
-        capturedImage = ImageIO.read(saveFile);
+        BufferedImage capturedImage = ImageIO.read(saveFile);
 
         JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
         jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);

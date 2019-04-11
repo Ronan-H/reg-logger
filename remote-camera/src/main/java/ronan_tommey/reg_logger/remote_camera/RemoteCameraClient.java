@@ -12,22 +12,25 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 
 public class RemoteCameraClient {
-
-    public static final String RASPI_IP = "192.168.0.27";
     public static final int PORT = 52197;
 
+    private String ip;
     private BufferedReader in;
     private BufferedOutputStream out;
-    private Camera nikon;
+    private DSLRCamera camera;
     private boolean running;
+
+    public RemoteCameraClient(String ip) {
+        this.ip = ip;
+    }
 
     public void go() throws IOException {
         System.out.println("Starting remote camera client...");
 
-        initCamera();
+        camera = new DSLRCamera();
         Socket socket;
 
-        socket = new Socket(RASPI_IP, PORT);
+        socket = new Socket(ip, PORT);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new BufferedOutputStream(socket.getOutputStream()) ;
 
@@ -41,22 +44,12 @@ public class RemoteCameraClient {
             // line read; capture image at given time
             captureTime = Long.parseLong(line);
 
-            BufferedImage capturedImage = new DSLRCamera(captureTime, nikon).captureImage(captureTime);
+            BufferedImage capturedImage = camera.captureImage(captureTime);
 
             System.out.println("Uploading captured image...");
 
             uploadImage(capturedImage);
         }
-    }
-
-    private void initCamera() {
-        nikon = null;
-
-        final CameraList cl = new CameraList();
-        System.out.println("Cameras: " + cl);
-        CameraUtils.closeQuietly(cl);
-        nikon = new Camera();
-        nikon.initialize();
     }
 
     public void uploadImage(BufferedImage image){
@@ -96,7 +89,7 @@ public class RemoteCameraClient {
 
     public static void main(String[] args) {
         try {
-            new RemoteCameraClient().go();
+            new RemoteCameraClient(args[0]).go();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 
 public class RemoteCamera {
-    private Socket clientSock;
     private PrintWriter out;
     private BufferedInputStream in;
     private DataInputStream dis;
@@ -19,7 +18,7 @@ public class RemoteCamera {
 
             System.out.println("Waiting for remote camera client to connect...");
             Socket clientSock = serverSock.accept();
-            System.out.println("Remote camera client conected.");
+            System.out.println("Remote camera client connected.");
             out = new PrintWriter(new OutputStreamWriter(clientSock.getOutputStream()));
             in = new BufferedInputStream(clientSock.getInputStream());
             dis = new DataInputStream(clientSock.getInputStream());

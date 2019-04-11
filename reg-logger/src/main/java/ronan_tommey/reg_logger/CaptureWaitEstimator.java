@@ -1,6 +1,9 @@
 package ronan_tommey.reg_logger;
 
 import ronan_tommey.reg_logger.car_data.*;
+import ronan_tommey.reg_logger.image_processing.CarPassImageDump;
+
+import java.io.IOException;
 
 public class CaptureWaitEstimator {
     // minimum distance the car has to be from where it started
@@ -17,13 +20,15 @@ public class CaptureWaitEstimator {
     private boolean[] lastMovingPixels;
     private CarEstimate lastCarEstimate;
     private FrameTimeManager frameTimeManager;
+    private CarPassImageDump carPassImageDump;
     private boolean allowCapture;
 
-    public CaptureWaitEstimator(int numEstimateFrames, int capturePoint, int imageWidth, long captureLatency) {
+    public CaptureWaitEstimator(int numEstimateFrames, int capturePoint, int imageWidth, long captureLatency, CarPassImageDump carPassImageDump) {
         this.numEstimateFrames = numEstimateFrames;
         this.capturePoint = capturePoint;
         this.imageWidth = imageWidth;
         this.captureLatency = captureLatency;
+        this.carPassImageDump = carPassImageDump;
         carDataSeries = new CarDataSeries(imageWidth);
         // TODO: don't hard code buffer size
         frameTimeManager = new FrameTimeManager(350);
@@ -69,6 +74,14 @@ public class CaptureWaitEstimator {
             if(carDataSeries.size() > 0) {
                 // reset CarDataSeries object; should only contain frame data of one pass
                 carDataSeries = new CarDataSeries(imageWidth);
+
+                if (carPassImageDump != null) {
+                    try {
+                        carPassImageDump.dumpFrames();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
         else {

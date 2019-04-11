@@ -20,7 +20,7 @@ class CaptureWaitEstimatorTest {
     void estimateReady() {
         CarData dummy = new CarData(0, 0, 0, 0);
 
-        CaptureWaitEstimator estimator = new CaptureWaitEstimator(4, 0, 0, 0);
+        CaptureWaitEstimator estimator = new CaptureWaitEstimator(4, 0, 0, 0, null);
         assertFalse(estimator.estimateReady());
 
         for(int i = 0; i < 3; i++)

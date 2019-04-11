@@ -6,7 +6,7 @@ import java.io.*;
 
 public class PiCamFrameStreamer implements Runnable{
     private static final int blockSize = 4096;
-    private static final int numBlocks = 64;
+    private static final int numBlocks = 8;
 
     private InputStream inputStream;
     private boolean running;
@@ -43,7 +43,6 @@ public class PiCamFrameStreamer implements Runnable{
         long imageTime = 0;
         long lastImageTime = System.nanoTime();
         boolean eofFound;
-        int highestNumBytes = 0;
         int nextBlock;
         int byteCounter;
         int oldBytesFromStart;
@@ -94,10 +93,6 @@ public class PiCamFrameStreamer implements Runnable{
                     }
 
                     numImageBytes += 2;
-
-                    if (numImageBytes > highestNumBytes) {
-                        highestNumBytes = numImageBytes;
-                    }
 
                     imageBytes = new byte[numImageBytes];
 
