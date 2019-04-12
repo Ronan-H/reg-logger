@@ -30,6 +30,7 @@ public class CarPassSimulator {
                     inputFrames[0].getWidth(),
                     RegCapturer.TOTAL_CAPTURE_LATENCY,
                     null);
+            KMPHEstimator kmphEstimator = new KMPHEstimator(inputFrames[0].getWidth(),  20);
 
             for (int i = 0; i < inputFrames.length; i++) {
                 System.out.printf("Frame %d%n", i);
@@ -44,9 +45,10 @@ public class CarPassSimulator {
                     System.out.println("Estimate ready");
 
                     CarEstimate carEstimate = waitEstimator.generateCarEstimate();
+                    double kmphSpeed = kmphEstimator.getKMPHEstimate(carEstimate.getPixelSpeed(), frameTimeManager);
 
-                    System.out.printf("Going right: %b%nEstimated pixel speed: %.2f%n",
-                            carDataSeries.isGoingRight(), carEstimate.getPixelSpeed());
+                    System.out.printf("Going right: %b%nEstimated pixel speed: %.2f%nEstimated speed in KMPH: %.2f%n",
+                            carDataSeries.isGoingRight(), carEstimate.getPixelSpeed(), kmphSpeed);
 
                     long waitEstimate = waitEstimator.getWaitEstimate();
 
