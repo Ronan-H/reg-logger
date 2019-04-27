@@ -11,7 +11,7 @@ public class FrameTimeManager {
 
     private List<Long> delays;
     private int bufferSize;
-
+    
     public FrameTimeManager(int bufferSize) {
         this.bufferSize = bufferSize;
 
