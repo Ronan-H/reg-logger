@@ -75,40 +75,62 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
         }
     }
 
+    /**
+     * Processes a single frame of video streamed from the PiCamFrameStreamer class.
+     *
+     * @param frame Frame to process
+     * @param delta Amount of time (nanoseconds) that has passed from the last frame
+     *              being streamed to to this one
+     */
     private void processFrame(BufferedImage frame, long delta) {
+        // ignore the first few frames to avoid the camera white balancing
+        // being detected as movement etc
         if (frameCounter < numIgnoreFirst) {
             // ignore frame
             return;
         }
 
+        // highlight movement in the image
         BufferedImage movementImage = movementHighlighter.getHighlightedImage(frame);
 
-        // boolean array representation of the passed in image, where "true"
-        // means the car covers that pixel, and "false" if it doesn't. array is
-        // one dimension, with increasing indexes going left to right first, then
-        // down, on the passed in image (ie. x = i % width, y = i / width)
+        // convert the black and white image to a boolean array for efficiency
         boolean[] movingPixels = FrameUtils.convertImageToBooleanArray(movementImage);
+
+        // remove noise in the movement array
         FrameUtils.removeNoise(movingPixels, frame.getWidth(), 125);
 
+        // if there's any movement in the image, add the above images to the carPassImageDump
+        /// to be saved together whenever the car has left the frame (to prevent slowdowns)
         int movingPixelCount = FrameUtils.countMoving(movingPixels);
-
         if (movingPixelCount > 0) {
             carPassImageDump.addFrames(frame, movementImage, movingPixels, frameCounter);
         }
 
+        // generate a CarData object based on image movement
         CarData data = CarDataUtils.generateCarData(movingPixels, frame.getWidth());
 
+        // add frame data to class that generates the wait estimates
         waitEstimator.addNextFrameData(data, movingPixels, delta);
 
         if (data != null) {
+            // car detected in frame
+
             if(waitEstimator.estimateReady()) {
+                // waitEstimator has enough information to generate a wait estimate
+
+                // generate estimate of car's speed
                 CarEstimate carEstimate = waitEstimator.generateCarEstimate();
+
+                // generate a wait time estimate (nanoseconds) based on the car's position and speed
                 long waitEstimate = waitEstimator.getWaitEstimate();
+
+                // wait until as late as possible to "lock in" the estimate to improve accuracy
                 if(waitEstimate > minEstimateBeforeCapture && waitEstimate < maxEstimateBeforeCapture)
                 {
                     System.out.println("\tWait estimate: " + waitEstimate);
                     System.out.println("\tLocking in estimate...\n");
 
+                    // store details of the car pass in a CarPassDetails object
                     CarPassDetails carPassDetails = new CarPassDetails(
                             Calendar.getInstance().getTimeInMillis(),
                             waitEstimator.isGoingRight() ? "Right" : "Left",
@@ -116,8 +138,12 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
                             carEstimate.getKmphSpeed()
                     );
 
+                    // hand off the wait estimate to another class to handle sending the
+                    // request to take an image, downloading and saving the image etc
                     captureLogger.capturePass(carPassDetails, waitEstimate);
 
+                    // notify the waitEstimator that an image has been taken to prevent any attempts
+                    // at taking more pictures of this same car pass
                     waitEstimator.onCapture();
                 }
             }

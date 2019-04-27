@@ -2,7 +2,6 @@ package ronan_tommey.reg_logger.testing_tools.frame_overlay;
 
 import ronan_tommey.reg_logger.CaptureWaitEstimator;
 import ronan_tommey.reg_logger.RegCapturer;
-import ronan_tommey.reg_logger.RegLogger;
 import ronan_tommey.reg_logger.car_data.*;
 import ronan_tommey.reg_logger.image_processing.FrameUtils;
 
@@ -68,7 +67,7 @@ public class CarPassSimulator {
     public static void main(String[] args) {
         System.out.println("Simulating car pass...\n");
 
-        String usingDir = "./res/car-data-testing/50km-pass-demo/";
+        String usingDir = "./res/car-data-testing/30km-pass-demo/";
         String inputDir = usingDir + "input/";
         String outputDir = usingDir + "output/";
         CarPassSimulator carPassSimulator = new CarPassSimulator(inputDir, outputDir);

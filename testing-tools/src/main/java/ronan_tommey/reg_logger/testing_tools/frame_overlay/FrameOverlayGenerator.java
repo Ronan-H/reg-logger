@@ -36,7 +36,7 @@ public class FrameOverlayGenerator {
     public static void main(String[] args) {
         System.out.println("Generating overlay frames...");
 
-        String usingDir = "./res/car-data-testing/sample-frames-1/";
+        String usingDir = "./res/car-data-testing/30km-pass-demo/";
         String inputDir = usingDir + "input/";
         String outputDir = usingDir + "output/";
         FrameOverlayGenerator frameOverlayGenerator = new FrameOverlayGenerator(inputDir, outputDir);

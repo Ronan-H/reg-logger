@@ -44,7 +44,7 @@ public class FrameOverlay {
     }
 
     public void saveToFile(String outputDir, int fileNum) {
-        String path = String.format("%sframe-overlay-%d.png", outputDir, fileNum);
+        String path = String.format("%sframe-overlay-%03d.png", outputDir, fileNum);
         try {
             ImageIO.write(image, "PNG", new File(path));
         } catch (IOException e) {
