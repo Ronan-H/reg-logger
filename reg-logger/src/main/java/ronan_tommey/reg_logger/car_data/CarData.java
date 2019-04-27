@@ -20,6 +20,13 @@ public class CarData {
         width = rightX - leftX;
     }
 
+    /**
+     * CarData gets the data of the car from each frame
+     * @param leftX The left-most pixel of the car in the frame
+     * @param rightX The right-most pixel of the car in the frame
+     * @param topY  The top-most pixel of the car in the frame
+     * @param bottomY The bottom-most pixel of the car in the frame
+     */
     public CarData(int leftX, int rightX, int topY, int bottomY) {
         this(leftX, rightX, topY, bottomY, -1);
     }
@@ -40,10 +47,17 @@ public class CarData {
         return bottomY;
     }
 
+    /**
+     * Sets the registration position estimate to the passed in value
+     * @param regPosEstimate The registration's position estimate
+     */
     public void setRegPosEstimate(int regPosEstimate) {
         this.regPosEstimate = regPosEstimate;
     }
 
+    /**
+     * Gets the registration's position estimate from CarUtils.AddRegPosEstimate
+     */
     public int getRegPosEstimate() {
         return regPosEstimate;
     }
@@ -52,10 +66,16 @@ public class CarData {
         return width;
     }
 
+    /**
+     * Checks if this carData is the same as another carData used in testing
+     * @param otherObj CarData object used in testing
+     * @return Boolean value if the two objects are equal
+     */
     @Override
     public boolean equals(Object otherObj) {
         CarData other = null;
 
+        //To catch error if two different types are input
         try {
             other = (CarData) otherObj;
         }
