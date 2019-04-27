@@ -8,13 +8,19 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Calendar;
 
+/**
+ * Uses several of the classes to capture an image of the cars registration plate at the correct time
+ */
 public class RegCapturer implements PiCamFrameListener, Runnable {
+    //Set width and height of capture image
     public static final int CAP_WIDTH = 300;
     public static final int CAP_HEIGHT = 64;
 
     public static final int FPS = 25;
+    //Nano seconds between frames
     public static final long NS_BETWEEN_FRAMES = 1000000000 / FPS;
 
+    //Min and max value of estimated capture time
     private static final long minEstimateBeforeCapture = -200 * 1000000;
     private static final long maxEstimateBeforeCapture = 150 * 1000000;
     private static final int numIgnoreFirst = 3 * FPS;
@@ -23,6 +29,7 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
     private static final int LAN_LATENCY = 5 * 1000000;
     public static final int TOTAL_CAPTURE_LATENCY = DSLR_CAPTURE_LATENCY + LAN_LATENCY;
 
+    //The point of the frame at which the registration plate will be
     public static final int CAPTURE_POINT = 250;
 
     public static final int REMOTE_CAMERA_PORT = 52197;
@@ -33,6 +40,7 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
     private BufferedImage nextFrame;
     private long nextFrameDelta;
 
+    //Class objects for calculations
     private long frameCounter = 0;
     private CaptureWaitEstimator waitEstimator;
     private RemoteCamera remoteCamera;
@@ -52,6 +60,9 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
         new Thread(captureLogger).start();
     }
 
+    /**
+     * Continuously waits for and processes frames supplied by piCamFrameStreamer
+     */
     @Override
     public void run() {
         running = true;
@@ -150,7 +161,13 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
         }
     }
 
+    /**
+     * Reads in next frame from the list
+     * @param image The image of the car
+     * @param delta The difference in time between current frame and the last frame
+     */
     public synchronized void onFrameRead(BufferedImage image, long delta) {
+        //completes when all frames are read
         if (nextFrame != null) {
             return;
         }
