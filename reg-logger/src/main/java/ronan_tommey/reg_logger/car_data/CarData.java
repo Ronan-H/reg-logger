@@ -1,5 +1,8 @@
 package ronan_tommey.reg_logger.car_data;
 
+/**
+ * Gets information about the car in the frame
+ */
 public class CarData {
     // positions of the leftmost and rightmost moving pixels in the image
     private int leftX, rightX;
@@ -21,7 +24,6 @@ public class CarData {
     }
 
     /**
-     * CarData gets the data of the car from each frame
      * @param leftX The left-most pixel of the car in the frame
      * @param rightX The right-most pixel of the car in the frame
      * @param topY  The top-most pixel of the car in the frame

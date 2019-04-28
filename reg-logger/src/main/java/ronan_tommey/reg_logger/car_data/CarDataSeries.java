@@ -3,14 +3,14 @@ package ronan_tommey.reg_logger.car_data;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * CarDataSeries stores the series of frames from when a car passes into a list
+ */
 public class CarDataSeries {
     private int imageWidth;
     //List of frames of singular car passing
     private List<CarData> carDataList;
 
-    /**
-     * CarDataSeries stores the series of frames from when a car passes into a list
-     */
     public CarDataSeries(int imageWidth) {
         this.imageWidth = imageWidth;
         carDataList = new ArrayList<>();
