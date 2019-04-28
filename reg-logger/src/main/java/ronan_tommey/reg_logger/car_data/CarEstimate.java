@@ -1,7 +1,7 @@
 package ronan_tommey.reg_logger.car_data;
 
 /**
- * Estimates the speed of the car in kmph and pixel speed from the series of frames
+ * Stores an estimate of the speed of a car in kmph and pixel speed from the series of frames
  */
 public class CarEstimate {
     private double pixelSpeed;

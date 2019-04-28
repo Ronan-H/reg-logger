@@ -42,21 +42,28 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
 
     //Class objects for calculations
     private long frameCounter = 0;
+    private FrameTimeManager frameTimeManager;
     private CaptureWaitEstimator waitEstimator;
     private RemoteCamera remoteCamera;
     private CarPassLogger carPassLogger;
     private AsyncALPRCaptureLogger captureLogger;
     private CarPassImageDump carPassImageDump;
+    private KMPHEstimator kmphEstimator;
     private boolean running;
 
     public RegCapturer() {
+        frameTimeManager = new FrameTimeManager(350);
         piCamFrameStreamer = new PiCamFrameStreamer(CAP_WIDTH, CAP_HEIGHT, FPS, this);
         movementHighlighter = new MovementHighlighter(CAP_WIDTH, CAP_HEIGHT);
         carPassImageDump = new CarPassImageDump("./test-images");
-        waitEstimator = new CaptureWaitEstimator(4, CAPTURE_POINT, CAP_WIDTH, TOTAL_CAPTURE_LATENCY, carPassImageDump);
+        waitEstimator = new CaptureWaitEstimator(4, CAPTURE_POINT, CAP_WIDTH, TOTAL_CAPTURE_LATENCY, frameTimeManager, carPassImageDump);
         remoteCamera = new RemoteCamera(REMOTE_CAMERA_PORT);
+
         carPassLogger = new CarPassFileSystem("./car-pass-log");
+        //carPassLogger = new CarPassDatabase();
+
         captureLogger = new AsyncALPRCaptureLogger(remoteCamera, carPassLogger);
+        kmphEstimator = new KMPHEstimator(CAP_WIDTH, 20);
         new Thread(captureLogger).start();
     }
 
@@ -146,7 +153,7 @@ public class RegCapturer implements PiCamFrameListener, Runnable {
                             Calendar.getInstance().getTimeInMillis(),
                             waitEstimator.isGoingRight() ? "Right" : "Left",
                             carEstimate.getPixelSpeed(),
-                            carEstimate.getKmphSpeed()
+                            kmphEstimator.getKMPHEstimate(carEstimate.getPixelSpeed(), frameTimeManager)
                     );
 
                     // hand off the wait estimate to another class to handle sending the

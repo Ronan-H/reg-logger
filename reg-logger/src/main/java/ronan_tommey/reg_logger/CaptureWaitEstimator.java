@@ -35,16 +35,15 @@ public class CaptureWaitEstimator {
      * @param captureLatency The total time it takes to actually capture an image of the passing car's reg plate
      * @param carPassImageDump Associated CarPassImageDump object, to trigger the dumping of frames. Can be null.
      */
-    public CaptureWaitEstimator(int numEstimateFrames, int capturePoint, int imageWidth, long captureLatency, CarPassImageDump carPassImageDump) {
+    public CaptureWaitEstimator(int numEstimateFrames, int capturePoint, int imageWidth, long captureLatency, FrameTimeManager frameTimeManager, CarPassImageDump carPassImageDump) {
         this.numEstimateFrames = numEstimateFrames;
         this.capturePoint = capturePoint;
         this.imageWidth = imageWidth;
         this.captureLatency = captureLatency;
+        this.frameTimeManager = frameTimeManager;
         this.carPassImageDump = carPassImageDump;
 
         carDataSeries = new CarDataSeries(imageWidth);
-        // TODO: don't hard code buffer size
-        frameTimeManager = new FrameTimeManager(350);
         allowCapture = true;
     }
 
